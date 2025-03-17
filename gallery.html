@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+  <meta charset="UTF-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Easi3R: Estimating Disentangled Motion from DUSt3R Without Training</title>
+
+  <meta name="description" content="Easi3R">
+  <meta property="og:title" content="Easi3R: Estimating Disentangled Motion from DUSt3R Without Training" />
+  <meta property="og:description"
+    content="An online 3D reasoning framework for various 3D tasks from only RGB inputs." />
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X630-->
+  <meta property="og:image" content="https://Easi3R.github.io/static/images/icon.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:type" content="website">
+
+
+  <meta name="twitter:title" content="Easi3R: Estimating Disentangled Motion from DUSt3R Without Training">
+  <meta name="twitter:description"
+    content="An online 3D reasoning framework for various 3D tasks from only RGB inputs.">
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X600-->
+  <meta name="twitter:image" content="https://Easi3R.github.io/static/images/icon.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Keywords for your paper to be indexed by-->
+  <meta name="keywords" content="Easi3R">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" href="./static/images/favicon.ico">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+  <link rel="stylesheet" href="static/css/app.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8ZERS5BVPS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-8ZERS5BVPS');
+  </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+  <script src="static/js/app.js"></script>
+  <script src="static/js/synced_video_selector.js"></script>
+
+  <style>
+    .final-element {
+      white-space: nowrap;
+    }
+
+    .pagination-container {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
+      gap: 0.5rem;
+    }
+
+    .pagination-container button {
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+    }
+
+    .thumbnail.outer {
+      margin-bottom: 20px;
+      /* so that separate items have some spacing */
+    }
+  </style>
+</head>
+
+<body style="padding: 5%; padding-top: min(15px, 5%); width: 100%">
+  <div class="container-lg text-center" style="max-width: 100%; margin: auto;" id="main">
+    <!-- <div class="container" id="main"> -->
+    <div class="row">
+      <h2 class="col-md-12 text-center">
+        <img src="./static/images/android-chrome-512x512.png" alt="ICON"
+          style="max-width: 64px; vertical-align: middle;">
+        <strong>Easi3R: Estimating Disentangled Motion from DUSt3R Without Training</strong>
+      </h2>
+    </div>
+    <div class="row text-center">
+      <div class="col-md-3">
+      </div>
+      <div class="is-size-5 publication-authors">
+        <span class="author-block">
+          <a href="https://rover-xingyu.github.io/">Xingyu 
+              Chen</a><sup>1</sup></span>&nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="author-block">
+            <a href="https://fanegg.github.io/">Yue 
+                Chen</a><sup>1</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+        </span>
+        <span class="author-block">
+            <a href="https://xiuyuliang.cn/">Yuliang 
+                Xiu</a><sup>1,2</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+        </span>
+        <span class="author-block">
+            <a href="https://www.cvlibs.net/">Andreas 
+                Geiger</a><sup>3</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+        </span>
+        <span class="author-block">
+            <a href="https://apchenstu.github.io/">Anpei 
+                Chen</a><sup>1,3</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+        </span>
+
+        <div class="is-size-5 publication-authors">
+          <span class="author-block"><sup>1</sup>Westlake University</span>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <span class="author-block"><sup>2</sup>Max Planck Institute for Intelligent Systems</span>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <span class="author-block"><sup>3</sup>University of Tübingen, Tübingen AI Center</span>
+        </div>
+      </div>
+
+      <br>
+      <br>
+      <br>
+      <br>
+
+      <div class="columns is-centered">
+        <div class="column is-centered is-four-fifths">
+          <div class="notification is-centered is-info is-rounded"
+            style="text-align: center; padding-bottom: 5px; padding-top: 5px;  background-color: #ffffff;">
+            <h6 class="title is-2 publication-title" style="margin-bottom:0rem; text-align: center; color:#8e6757; font-size: 18px; margin-left: auto; margin-right: auto;">
+              <strong>TL;DR:</strong> A simple training-free approach adapting DUSt3R for dynamic scenes.
+          </h6>
+          </div>
+        </div>
+    </div>
+    
+
+      <br>
+      <br>
+
+      <!-- <p style="text-align: center; padding: 0em; font-weight: bold;">
+      Please click on other pages to see more results
+    </p> -->
+
+      <div style="text-align: center; padding: 1em; font-size: 18px">
+        <!-- Navigation links -->
+        <strong>Dynamic scenes</strong>
+        &nbsp;&bull;&nbsp;
+        <a href="gallery_3D.html" style="font-size: 18px;">Static Scenes</a>
+      </div>
+
+      <div style="text-align: center; padding: 5px; font-family: Arial, sans-serif; background-color: #ffffff; width: 100%; box-sizing: border-box; display: flex;">
+        <div style="color: #333; padding: 5px; background-color: #ffffff; margin-right: 4px; flex: 1;font-size: 18px">
+          <strong>We present results on DAVIS dataset below. Check out our <a href="interactive.html" style="font-size: 18px">interactive
+              demo</a> for more interesting results!
+           </strong>
+        </div>
+    </div>
+
+      <div class="container video-gallery" id="videoGallery" style="max-width: 100%;">
+
+        <!-- Thumbnails -->
+        <div id="thumbnails" class="card-columns captioned_videos list"></div>
+      </div>
+
+      <div class="pagination-container" id="paginationControls"></div>
+    </div>
+  </div>
+
+  <script src="static/js/stopExecutionTimeout.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.js?features=IntersectionObserver"></script>
+  <script src="static/js/yall.js"></script>
+  <script>
+    if (document.location.search.match(/type=embed/gi)) {
+      window.parent.postMessage("resize", "*");
+    }
+
+    /*
+    const bucket = "https://storage.googleapis.com/gallery_videos/v0"
+    
+    async function listFolders() {
+        // Interacting with the google cloud storage APIS requires full on node installatiosn and such so meh, just parse the returned XML :) 
+        let xmlDoc = await fetch(bucket).then(response => response.text()).then(xmlString => {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
+            return xmlDoc;
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+        const contentsElements = xmlDoc.getElementsByTagName('Contents');
+        let nodeArray = [].slice.call(contentsElements);
+    
+        function xmlToKey(folder) {
+            let key = folder.getElementsByTagName("Key")[0].textContent;
+            let parts = key.split("/");
+            return parts[0] + "/" + parts[1];
+        }
+    
+        const keys = [...new Set(nodeArray.map(f => xmlToKey(f)))];
+        return keys.filter(f => f.includes(".mp4"))
+    }   
+    
+        let files = listFolders();
+        console.log(files)
+      console.log("hello")*/
+
+    const shuffleArray = array => {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+      }
+    }
+
+    var videoPaths = ["bike-packing_Free_1.mp4", 
+    "breakdance-flare_Free_1.mp4", 
+    // "bus_Free_1.mp4", 
+    "camel_Free_1.mp4", 
+    "car-shadow_Free_1.mp4", 
+    "cows_Free_1.mp4", 
+    "crossing_Free_1.mp4", 
+    "dance-jump_Free_1.mp4", 
+    "dance-twirl_Free_1.mp4", 
+    "dancing_Free_1.mp4", 
+    "dog-agility_Free_1.mp4", 
+    "dogs-jump_Free_1.mp4", 
+    "dog_Free_1.mp4", 
+    // "drift-straight_Free_1.mp4", 
+    "drift-turn_Free_1.mp4", 
+    "hockey_Free_1.mp4", 
+    // "horsejump-low_Free_1.mp4", 
+    "judo_Free_1.mp4", 
+    "lady-running_Free_1.mp4", 
+    "libby_Free_1.mp4", 
+    "lindy-hop_Free_1.mp4", 
+    "loading_Free_1.mp4", 
+    "mbike-trick_Free_1.mp4", 
+    "motorbike_Free_1.mp4", 
+    "night-race_Free_1.mp4", 
+    "parkour_Free_1.mp4", 
+    "pigs_Free_1.mp4", 
+    "planes-water_Free_1.mp4", 
+    "rallye_Free_1.mp4", 
+    "rhino_Free_1.mp4", 
+    // "scooter-black_Free_1.mp4", 
+    // "scooter-gray_Free_1.mp4", 
+    "skate-park_Free_1.mp4", 
+    // "soapbox_Free_1.mp4", 
+    "soccerball_Free_1.mp4", 
+    "stunt_Free_1.mp4", 
+    "train_Free_1.mp4", 
+    "tuk-tuk_Free_1.mp4", 
+    "varanus-cage_Free_1.mp4"];
+
+    const itemsPerPage = 6;
+    let currentPage = 1;
+    let totalPages = 1;
+
+    document.addEventListener("DOMContentLoaded", function () {
+      shuffleArray(videoPaths);
+      totalPages = Math.ceil(videoPaths.length / itemsPerPage);
+
+      showPage(currentPage);
+      createPaginationControls();
+
+      // Attempt to auto-play every second
+      setInterval(() => {
+        document.querySelectorAll('video').forEach(vid => vid.play());
+      }, 1000);
+    });
+
+    function showPage(pageNumber) {
+      const thumbnails = document.getElementById("thumbnails");
+      thumbnails.innerHTML = ""; // clear previous videos
+
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+      const startIndex = (pageNumber - 1) * itemsPerPage;
+      const endIndex = Math.min(startIndex + itemsPerPage, videoPaths.length);
+      const pageItems = videoPaths.slice(startIndex, endIndex);
+
+      // Create video cards for the chosen subset
+      pageItems.forEach(videoPath => {
+        const outer = document.createElement("DIV");
+        outer.classList = "thumbnail outer card";
+
+        const inner = document.createElement("DIV");
+        inner.style.padding = "5px";
+        inner.classList = "inner card-body";
+
+        let componentVideo = document.createElement("VIDEO");
+        componentVideo.loop = true;
+        componentVideo.playsInline = true;
+        componentVideo.muted = true;
+        componentVideo.autoplay = true;
+        componentVideo.style.width = "100%";
+
+        if (isIOS) {
+          // iOS: autoplay usually blocked
+          componentVideo.src = "./static/videos/gallery/codec/" + videoPath;
+          componentVideo.controls = false;
+        } else {
+          componentVideo.controls = false;
+          componentVideo.classList = "video lazy";
+          componentVideo.onmousemove = () => componentVideo.play();
+          componentVideo.onmouseout = () => componentVideo.play();
+
+          let componentSource = document.createElement("SOURCE");
+          componentSource.type = "video/mp4";
+          componentSource.setAttribute("data-src",
+            "./static/videos/gallery/codec/" + videoPath
+          );
+          componentVideo.appendChild(componentSource);
+        }
+
+        // Optionally a hidden or short caption
+        const hiddenCaption = document.createElement("span");
+        hiddenCaption.classList = "name invisible";
+        hiddenCaption.style.display = "none";
+        hiddenCaption.appendChild(document.createTextNode(videoPath));
+        inner.appendChild(componentVideo);
+        inner.appendChild(hiddenCaption);
+
+        outer.appendChild(inner);
+        thumbnails.appendChild(outer);
+      });
+
+      // Re-initialize lazy loading
+      if (!isIOS) {
+        yall({
+          observeChanges: false
+        });
+      }
+    }
+
+    // Creates the page-number (or Prev/Next) controls
+    function createPaginationControls() {
+      const container = document.getElementById("paginationControls");
+      container.innerHTML = ""; // clear old controls
+
+      // Example: "Prev" button
+      const prevBtn = document.createElement("button");
+      prevBtn.textContent = "Previous";
+      prevBtn.disabled = (currentPage === 1);
+      prevBtn.onclick = () => {
+        if (currentPage > 1) {
+          currentPage--;
+          showPage(currentPage);
+          createPaginationControls();
+        }
+      };
+      container.appendChild(prevBtn);
+
+      // Basic numeric buttons:
+      // For a very large # of videos, you’d want a more dynamic approach 
+      for (let i = 1; i <= totalPages; i++) {
+        const pageBtn = document.createElement("button");
+        pageBtn.textContent = i;
+        pageBtn.disabled = (i === currentPage);
+        pageBtn.onclick = () => {
+          currentPage = i;
+          showPage(currentPage);
+          createPaginationControls();
+        };
+        container.appendChild(pageBtn);
+      }
+
+      // Example: "Next" button
+      const nextBtn = document.createElement("button");
+      nextBtn.textContent = "Next";
+      nextBtn.disabled = (currentPage === totalPages);
+      nextBtn.onclick = () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          showPage(currentPage);
+          createPaginationControls();
+        }
+      };
+      container.appendChild(nextBtn);
+    }
+  </script>
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js'></script>
+  <script id="rendered-js">
+    $(function () {
+
+      // Search
+      var options = {
+        valueNames: ['name', 'category']
+      };
+
+      var videoList = new List('videoGallery', options);
+
+      function debounced(delay, fn) {
+        // https://jsfiddle.net/foxbunny/rL68o4ef/?utm_source=website&utm_medium=embed&utm_campaign=rL68o4ef.
+        let timerId;
+        return function (...args) {
+          if (timerId) {
+            clearTimeout(timerId);
+          }
+          timerId = setTimeout(() => {
+            fn(...args);
+            timerId = null;
+          }, delay);
+        }
+      }
+
+      $("#search").change(debounced(1000, function () {
+        // smooth scroll to thumbnails
+        $('html, body').animate({
+          scrollTop: $("#thumbnails").offset().top - 60
+        },
+          1000);
+      }));
+
+      // Filter
+      $('#filter').change(function () {
+        var selection = this.value;
+        if (selection) {
+          videoList.filter(function (item) {
+            return item.values().category == selection;
+          });
+        } else {
+          videoList.filter();
+        }
+      });
+    });
+
+    //Get URL query string
+    function getQueryVariable(variable) {
+      var query = window.location.search.substring(1);
+      var vars = query.split("&");
+      for (var i = 0; i < vars.length; i++) {
+        if (window.CP.shouldStopExecution(0)) break;
+        var pair = vars[i].split("=");
+        if (pair[0] == variable) { return pair[1]; }
+      } window.CP.exitedLoop(0);
+      return false;
+    }
+    // Get URL query string variables
+    var id = getQueryVariable("id");
+    var title = getQueryVariable("title");
+
+  </script>
+
+
+</body>
+
+</html>

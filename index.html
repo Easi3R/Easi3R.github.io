@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="A simple training-free approach adapting DUSt3R for dynamic scenes.">
+    <meta name="keywords" content="Easi3R">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Easi3R: Estimating Disentangled Motion from DUSt3R Without Training</title>
+
+    <link rel="icon" type="image/x-icon" href="static/images/android-chrome-512x512.png">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-PYVRSFMDRL');
+    </script>
+
+    <meta property="og:image" content="https://Easi3R.github.io/static/images/icon.png">
+    <!-- <meta property="og:image" content="static/images/icon.png"> -->
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Easi3R: Estimating Disentangled Motion from DUSt3R Without Training">
+    <meta name="twitter:description"
+        content="A simple training-free approach adapting DUSt3R for dynamic scenes.">
+    <meta name="twitter:image" content="https://Easi3R.github.io/static/images/icon.png">
+    <!-- <meta name="twitter:image" content="static/images/icon.png"> -->
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:400,600|Noto+Sans:400,600|Castoro:400,600"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/modern-normalize@3.0.1/modern-normalize.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.19.0/tabler-icons-outline.min.css"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="./static/css/bulma.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.4/dist/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.3/dist/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="./static/css/index.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <script defer src="./static/js/bulma-carousel.min.js"></script>
+    <script defer src="./static/js/index.js"></script>
+    <script defer src="./static/js/lazy.js"></script>
+    <script defer src="./static/js/iframe-compare.js"></script>
+    <style>
+        .center-image {
+            display: block;
+            margin: 0 auto;
+        }
+
+
+        .blend-img-item {
+            background: #f5f5f5;
+        }
+
+        .item {
+            margin: 10px;
+        }
+
+        .blend-img-background {
+            mix-blend-mode: multiply;
+        }
+
+        #interactive {
+            position: relative;
+            display: inline-block;
+            width: 768px;
+            aspect-ratio: 16/9;
+            max-width: 100%;
+            border: 2px solid #fff;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 0 4px #000;
+
+        }
+
+        #interactive canvas,
+        #interactive #glfailed,
+        #interactive #loading {
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+
+        #interactive #glfailed {
+            color: #f88;
+            background: black;
+            display: none;
+        }
+
+        #interactive #loading {
+            color: #000;
+            font-size: 32px;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.8);
+            display: none;
+        }
+        iframe {
+            border-radius: 0.5em;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1;
+            border: none;
+            box-shadow: 0 0 1em 0em rgba(0, 0, 0, 0.15);
+            max-width: 100%;
+            margin-top: 20px;
+            margin-bottom: 5px;
+            }
+
+        @media (max-width: 768px) {
+            iframe {
+                width: 100%;
+                height: auto;
+            }
+            }
+
+        .iframe-container {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            flex: 1;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px 0;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .load img {
+            width: 100px;
+            height: 70px;
+            object-fit: cover;
+            margin: 4px;
+            border: 2px solid #fff;
+            box-shadow: 0 0 4px #888;
+            border-radius: 6px;
+            vertical-align: bottom;
+        }
+
+        .load img:active {
+            box-shadow: 0 0 4px #000;
+            opacity: .8;
+        }
+
+        .megabuttons {
+            position: absolute;
+            left: 5px;
+            bottom: 5px;
+            text-transform: uppercase;
+            text-align: left;
+        }
+
+        nav {
+            text-align: center;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            width: 100%;
+            gap: 10px;
+        }
+
+        nav ul li {
+            flex: 1;
+            display: flex;
+            margin: 0;
+        }
+
+        nav ul li a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f5f5;
+            color: #363636;
+            padding: 10px 20px;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            min-height: 50px;
+            flex-grow: 1;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+
+        nav ul li a:hover {
+            background-color: #e4e4e4;
+            transform: scale(1.05);
+        }
+
+        nav ul li a:active {
+            background-color: #d3d3d3;
+            transform: scale(0.95);
+        }
+
+        nav ul li a.active {
+            background-color: #cccccc; /* Change color to indicate active tab */
+            color: #000000; /* Optional: Change text color if needed */
+        }
+
+
+        .dynamic-section {
+            display: none;
+            padding: 1rem 0;
+        }
+
+
+
+        .grid-container-2x6 {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(2, auto);
+            gap: 10px;
+            padding: 20px;
+            max-width: 80%;
+            margin: auto;
+        }
+
+        .grid-container-2x6 img {
+            width: 100%;
+            height: auto;
+        }
+
+        .grid-container-1x6 {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(1, auto);
+            gap: 10px;
+            padding: 20px;
+            max-width: 80%;
+            margin: auto;
+        }
+
+        .grid-container-1x6 img {
+            width: 100%;
+            height: auto;
+        }
+
+        .panel-style {
+            background-color: #fafafa;
+            padding: 20px;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="hero" style="margin-bottom: 0; padding-bottom: 0;">
+        <div class="hero-body" style="padding-bottom: 1rem;">
+            <div class="container is-max-desktop">
+                <div class="columns is-centered" style="margin-bottom: 0">
+                    <div class="column is-max-desktop has-text-centered">
+                        <h1 class="title is-2 publication-title" style="margin-bottom:0rem; max-width: 85%; margin-left: auto; margin-right: auto;">
+                            <img src="./static/images/android-chrome-512x512.png" alt="ICON"
+                                style="max-width: 96px; vertical-align: middle;">
+                            <strong>Easi3R: Estimating Disentangled Motion from DUSt3R Without Training</strong>
+                        </h1>
+                    </div>
+                </div>
+                <div class="columns is-centered">
+                    <div class="column is-four-fifths has-text-centered">
+                        <div class="is-size-5 publication-authors">
+                            <span class="author-block">
+                                <a href="https://rover-xingyu.github.io/">Xingyu 
+                                    Chen</a><sup>1</sup></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="author-block">
+                                <a href="https://fanegg.github.io/">Yue 
+                                    Chen</a><sup>1</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                            <span class="author-block">
+                                <a href="https://xiuyuliang.cn/">Yuliang 
+                                    Xiu</a><sup>1,2</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                            <span class="author-block">
+                                <a href="https://www.cvlibs.net/">Andreas 
+                                    Geiger</a><sup>3</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                            <span class="author-block">
+                                <a href="https://apchenstu.github.io/">Anpei 
+                                    Chen</a><sup>1,3</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                        </div>
+
+                        <div class="is-size-5 publication-authors">
+                            <span class="author-block"><sup>1</sup>Westlake University</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="author-block"><sup>2</sup>Max Planck Institute for Intelligent Systems</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="author-block"><sup>3</sup>University of Tübingen, Tübingen AI Center</span>
+                        </div>
+
+
+                        <div class="column has-text-centered">
+                            <div class="publication-links">
+                                <span class="link-block">
+                                    <a href="http://arxiv.org/abs/2503.xxxxx" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="ai ai-arxiv"></i>
+                                        </span>
+                                        <span>arXiv</span>
+                                    </a>
+                                </span>
+                                <!-- Video Link. -->
+
+                                <span class="link-block">
+                                    <a href="interactive.html" target="_blank"
+                                        class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"
+                                                style="fill: #ffdf0f">
+                                                <path
+                                                    d="M256 0c-25.3 0-47.2 14.7-57.6 36c-7-2.6-14.5-4-22.4-4c-35.3 0-64 28.7-64 64V261.5l-2.7-2.7c-25-25-65.5-25-90.5 0s-25 65.5 0 90.5L106.5 437c48 48 113.1 75 181 75H296h8c1.5 0 3-.1 4.5-.4c91.7-6.2 165-79.4 171.1-171.1c.3-1.5 .4-3 .4-4.5V160c0-35.3-28.7-64-64-64c-5.5 0-10.9 .7-16 2V96c0-35.3-28.7-64-64-64c-7.9 0-15.4 1.4-22.4 4C303.2 14.7 281.3 0 256 0zM240 96.1c0 0 0-.1 0-.1V64c0-8.8 7.2-16 16-16s16 7.2 16 16V95.9c0 0 0 .1 0 .1V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96c0 0 0 0 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16v55.9c0 0 0 .1 0 .1v80c0 13.3 10.7 24 24 24s24-10.7 24-24V160.1c0 0 0-.1 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16V332.9c-.1 .6-.1 1.3-.2 1.9c-3.4 69.7-59.3 125.6-129 129c-.6 0-1.3 .1-1.9 .2H296h-8.5c-55.2 0-108.1-21.9-147.1-60.9L52.7 315.3c-6.2-6.2-6.2-16.4 0-22.6s16.4-6.2 22.6 0L119 336.4c6.9 6.9 17.2 8.9 26.2 5.2s14.8-12.5 14.8-22.2V96c0-8.8 7.2-16 16-16c8.8 0 16 7.1 16 15.9V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96.1z">
+                                                </path>
+                                            </svg>
+                                        </span>
+                                        <span>Interactive Results</span>
+                                    </a>
+                                </span>
+                                <!-- Supp Link. -->
+                                <span class="link-block">
+                                    <a href="gallery.html" target="_blank"
+                                        class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="fas fa-images"></i>
+                                        </span>
+                                        <span>Gallery</span>
+                                    </a>
+                                </span>
+                                <span class="link-block">
+                                    <a href="https://github.com/Inception3D/Easi3R" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="fab fa-github"></i>
+                                        </span>
+                                        <span>Code</span>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="hero teaser">
+        <div class="container fluid">
+            <div class="hero-body is-max-widescreen">
+                <div class="columns is-centered">
+                    <div class="column is-centered is-full">
+                        <div class="notification is-centered is-info is-rounded"
+                            style="text-align: center; padding-bottom: 5px; padding-top: 5px; background-color: #ffffff;">
+                            <h6 class="title is-2 publication-title" style="margin-bottom:0rem; text-align: center; color:#8e6757; font-size: 22px; margin-left: auto; margin-right: auto;">
+                                <strong>TL;DR:</strong> A simple training-free approach adapting DUSt3R for dynamic scenes.
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+                <center>
+                    <video id="teaser" preload="auto" autoplay muted loop playsinline width="95%"
+                        style="pointer-events: none;">
+                        <source src="./static/videos/teaser.mp4" type="video/mp4">
+                    </video>
+                </center>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="section has-background-light">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <h2 class="title is-3">Abstract</h2>
+                    <div class="content has-text-justified">
+                        <p>
+                            Recent advances in DUSt3R have enabled robust estimation of dense point clouds and camera parameters of staticscenes, leveraging Transformer network architectures and direct supervision on large-scale 3D datasets. In contrast, the limited scale and diversity of available 4D datasets present a major bottleneck for training a highly generalizable 4D model. This constraint has driven conventional 4D methods to fine-tune 3D models on scalable dynamic video data with additional geometric priors such as optical flow and depths. In this work, we take an opposite path and introduce <strong>Easi3R</strong>, a simple yet efficient training-free method for 4D reconstruction. Our approach applies attention adaptation during inference, eliminating the need for from-scratch pre-training or network fine-tuning. We find that the attention layers in DUSt3R inherently encode rich information about camera and object motion. By carefully disentangling these attention maps, we achieve accurate dynamic region segmentation, camera pose estimation, and 4D dense point map reconstruction. Extensive experiments on real-world dynamic videos demonstrate that our lightweight attention adaptation significantly outperforms previous state-of-the-art methods that are trained or finetuned on extensive dynamic datasets.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div><br>
+    </section>
+
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <h2 class="title is-3">4D Reconstruction</h2>
+                    <p style="max-width: 90%; margin: 0 auto; text-align: center;">
+                        Here, we visualize cross-frame aligned static scenes with dynamic point clouds at a selected timestamp. 
+                        Instead of using GT dynamic masks, we use the <strong>estimated</strong> dynamic masks to filter out points at other timestamps.
+                        Click tabs below to explore the results for each baseline. 
+                    </p>
+                    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
+                        <span style="margin-right: 10px; font-weight: bold; font-size: 16px;">Comparison Method:</span>
+                        <nav style="flex: 1;">
+                            <ul>
+                                <li><a id="nav1" href="javascript:void(0);" onclick="showSection('vs_mon');setActive('nav1');">MonST3R</a></li>
+                                <li><a id="nav2" href="javascript:void(0);" onclick="showSection('vs_das');setActive('nav2');">DAS3R</a></li>
+                                <li><a id="nav3" href="javascript:void(0);" onclick="showSection('vs_cut');setActive('nav3');">CUT3R</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <script>
+                    function setActive(activeId) {
+                        // Remove 'active' class from all links
+                        document.querySelectorAll('nav ul li a').forEach(function(link) {
+                            link.classList.remove('active');
+                        });
+                    
+                        // Add 'active' class to the clicked link
+                        document.getElementById(activeId).classList.add('active');
+                    }
+                    </script>
+            </div>
+        </div>
+        <script defer src="./static/js/nav.js"></script>
+    
+
+    <section id="vs_mon" class="section dynamic-section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full  panel-style">
+                    <p id="compare-description" style="max-width: 90%; margin: 0 auto; text-align: center;">
+                        MonST3R suffers from structure misalignment and ghosting artifacts due to under-segmentation of the dog and goose.
+                    </p>
+                    <div id="wrapper" style="
+                            display: flex;
+                            flex-wrap: nowrap;
+                            justify-content: center;
+                            align-items: center;
+                            gap: 1em;
+                            width: 100%;
+                        ">
+                        <!-- Insert two iframes -->
+                        <div class="iframe-container">
+                            <iframe id="left-iframe"
+                            src="https://Easi3R.github.io/build/?playbackPath=https://Easi3R.github.io/recordings/recording_dog-gooses-mon.viser&initDistanceScale=0.85&initHeightOffset=0.08"></iframe>
+                            <p style="text-align: center; font-size: 20px; font-weight: bold; flex: 1; margin-bottom: 10px;">MonST3R</p>
+                        </div>
+                        <div class="iframe-container">
+                            <iframe id="right-iframe"
+                            src="https://Easi3R.github.io/build/?playbackPath=https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08"></iframe>
+                            <p style="text-align: center; font-size: 20px; font-weight: bold; flex: 1; margin-bottom: 10px;">Ours</p>
+                        </div>
+                    </div>
+                    
+                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; margin-bottom: 10px; max-width: 90%;">
+                        <img src="static/thumbs/dog-gooses.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-mon.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="MonST3R suffers from structure misalignment and ghosting artifacts due to under-segmentation of the dog and goose."
+                         class="thumbnail viser-thumbnail active" alt="dog-gooses" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/schoolgirls.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_schoolgirls-mon.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_schoolgirls-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="MonST3R suffers from structure misalignment and ghosting artifacts due to under-segmentation of schoolgirls."
+                         class="thumbnail viser-thumbnail" alt="schoolgirls" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/sheep.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_sheep-mon.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_sheep-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="MonST3R suffers from structure misalignment and ghosting artifacts due to under-segmentation of sheep."
+                         class="thumbnail viser-thumbnail" alt="sheep" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/drift-chicane.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-mon.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="MonST3R suffers from ghosting artifacts due to under-segmentation of the drift chicane."
+                         class="thumbnail viser-thumbnail" alt="drift-chicane" style="cursor: pointer; width: 100px;">
+                    </div>
+
+                    <p style="text-align: center; font-size: 1em; padding: 0em; color: #555;">
+                        Results are downsampled <strong>10 times</strong> for efficient online rendering
+                    </p>
+                    <div class="hide-on-touchscreens" style="
+                        display: flex;
+                        justify-content: center;
+                        gap: 1.5em;
+                        padding-top: 0.5em;
+                    ">
+                        <div>
+                            <i class="ti ti-view-360-arrow"></i> <strong>Left-click</strong> and
+                            drag to rotate
+                        </div>
+                        <div>
+                            <i class="ti ti-arrows-move"></i> <strong>Right-click</strong> and
+                            drag or
+                            <strong>WASD</strong>
+                            to move
+                        </div>
+                        <div><i class="ti ti-zoom"></i> <strong>Scroll</strong> to zoom</div>
+                        <div><strong>Click <i class="fas fa-pause"></i></strong> to pause</div>
+                    </div>
+                    <button onclick="window.location.href='./interactive.html';" target="_blank"
+                        style="font-size: 20px; font-family: 'Arial', sans-serif; background-color: #92A8D1; color: white; margin: 20px auto; display: block; padding: 15px 15px; border: none; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-align: center; transition: all 0.3s ease; cursor: pointer;">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"
+                                style="fill: #ffffff">
+                                <path
+                                    d="M256 0c-25.3 0-47.2 14.7-57.6 36c-7-2.6-14.5-4-22.4-4c-35.3 0-64 28.7-64 64V261.5l-2.7-2.7c-25-25-65.5-25-90.5 0s-25 65.5 0 90.5L106.5 437c48 48 113.1 75 181 75H296h8c1.5 0 3-.1 4.5-.4c91.7-6.2 165-79.4 171.1-171.1c.3-1.5 .4-3 .4-4.5V160c0-35.3-28.7-64-64-64c-5.5 0-10.9 .7-16 2V96c0-35.3-28.7-64-64-64c-7.9 0-15.4 1.4-22.4 4C303.2 14.7 281.3 0 256 0zM240 96.1c0 0 0-.1 0-.1V64c0-8.8 7.2-16 16-16s16 7.2 16 16V95.9c0 0 0 .1 0 .1V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96c0 0 0 0 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16v55.9c0 0 0 .1 0 .1v80c0 13.3 10.7 24 24 24s24-10.7 24-24V160.1c0 0 0-.1 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16V332.9c-.1 .6-.1 1.3-.2 1.9c-3.4 69.7-59.3 125.6-129 129c-.6 0-1.3 .1-1.9 .2H296h-8.5c-55.2 0-108.1-21.9-147.1-60.9L52.7 315.3c-6.2-6.2-6.2-16.4 0-22.6s16.4-6.2 22.6 0L119 336.4c6.9 6.9 17.2 8.9 26.2 5.2s14.8-12.5 14.8-22.2V96c0-8.8 7.2-16 16-16c8.8 0 16 7.1 16 15.9V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96.1z">
+                                </path>
+                            </svg>
+                        </span>
+                            Explore more interactive results for dynamic scene reconstruction!
+                    </button>
+                    <script>
+                        // Get the paragraph element
+                        var para = document.getElementById('click-interactive');
+
+                        // Add event listeners for mouse enter and mouse leave
+                        para.addEventListener('mouseenter', function () {
+                            para.style.fontSize = '22px'; // Increase font size
+                            para.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'; // Enhance shadow
+                        });
+
+                        para.addEventListener('mouseleave', function () {
+                            para.style.fontSize = '18px'; // Reset font size
+                            para.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)'; // Reset shadow
+                        });
+                    </script>
+                    <!-- <p> See more dynamic reconstruction results on DAVIS dataset in our <a href="./gallery.html">gallery</a>.</p> -->
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="vs_das" class="section dynamic-section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full  panel-style">
+                    <p id="compare-description-das" style="max-width: 90%; margin: 0 auto; text-align: center;">
+                        DAS3R suffers from ghosting artifacts due to inaccuracies in dynamic segmentation estimation.
+                        For example, it under-segments the sheep while over-segmenting the tree.
+                    </p>
+                    <div id="wrapper" style="
+                            display: flex;
+                            flex-wrap: nowrap;
+                            justify-content: center;
+                            align-items: center;
+                            gap: 1em;
+                            width: 100%;
+                        ">
+                        <!-- Insert two iframes -->
+                        <div class="iframe-container">
+                            <iframe id="left-iframe-das"
+                            src="https://Easi3R.github.io/build/?playbackPath=https://Easi3R.github.io/recordings/recording_dog-gooses-das.viser&initDistanceScale=0.85&initHeightOffset=0.08"></iframe>
+                            <p style="text-align: center; font-size: 20px; font-weight: bold; flex: 1; margin-bottom: 10px;">DAS3R</p>
+                        </div>
+                        <div class="iframe-container">
+                            <iframe id="right-iframe-das"
+                            src="https://Easi3R.github.io/build/?playbackPath=https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08"></iframe>
+                            <p style="text-align: center; font-size: 20px; font-weight: bold; flex: 1; margin-bottom: 10px;">Ours</p>
+                        </div>
+                    </div>
+                    
+                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; margin-bottom: 10px; max-width: 90%;">
+                        <img src="static/thumbs/dog-gooses.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-das.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="DAS3R suffers from structure misalignment and ghosting artifacts due to inaccuracies in dynamic segmentation estimation. For example, it under-segments the dog and goose."
+                         class="thumbnail viser-thumbnail-das" alt="dog-gooses" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/schoolgirls.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_schoolgirls-das.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_schoolgirls-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="DAS3R suffers from structure misalignment with over-segmentation of walls."
+                         class="thumbnail viser-thumbnail-das" alt="schoolgirls" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/sheep.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_sheep-das.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_sheep-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="DAS3R suffers from ghosting artifacts due to inaccuracies in dynamic segmentation estimation. For example, it under-segments the sheep while over-segmenting the tree."
+                         class="thumbnail viser-thumbnail-das" alt="sheep" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/drift-chicane.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-das.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="DAS3R suffers from ghosting artifacts due to inaccuracies in dynamic segmentation estimation. For example, it under-segments the drift chicane while over-segmenting the building."
+                         class="thumbnail viser-thumbnail-das" alt="drift-chicane" style="cursor: pointer; width: 100px;">
+                    </div>
+
+                    <p style="text-align: center; font-size: 1em; padding: 0em; color: #555;">
+                        Results are downsampled <strong>10 times</strong> for efficient online rendering
+                    </p>
+                    <div class="hide-on-touchscreens" style="
+                        display: flex;
+                        justify-content: center;
+                        gap: 1.5em;
+                        padding-top: 0.5em;
+                    ">
+                        <div>
+                            <i class="ti ti-view-360-arrow"></i> <strong>Left-click</strong> and
+                            drag to rotate
+                        </div>
+                        <div>
+                            <i class="ti ti-arrows-move"></i> <strong>Right-click</strong> and
+                            drag or
+                            <strong>WASD</strong>
+                            to move
+                        </div>
+                        <div><i class="ti ti-zoom"></i> <strong>Scroll</strong> to zoom</div>
+                        <div><strong>Click <i class="fas fa-pause"></i></strong> to pause</div>
+                    </div>
+                    <button onclick="window.location.href='./interactive.html';" target="_blank"
+                        style="font-size: 20px; font-family: 'Arial', sans-serif; background-color: #92A8D1; color: white; margin: 20px auto; display: block; padding: 15px 15px; border: none; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-align: center; transition: all 0.3s ease; cursor: pointer;">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"
+                                style="fill: #ffffff">
+                                <path
+                                    d="M256 0c-25.3 0-47.2 14.7-57.6 36c-7-2.6-14.5-4-22.4-4c-35.3 0-64 28.7-64 64V261.5l-2.7-2.7c-25-25-65.5-25-90.5 0s-25 65.5 0 90.5L106.5 437c48 48 113.1 75 181 75H296h8c1.5 0 3-.1 4.5-.4c91.7-6.2 165-79.4 171.1-171.1c.3-1.5 .4-3 .4-4.5V160c0-35.3-28.7-64-64-64c-5.5 0-10.9 .7-16 2V96c0-35.3-28.7-64-64-64c-7.9 0-15.4 1.4-22.4 4C303.2 14.7 281.3 0 256 0zM240 96.1c0 0 0-.1 0-.1V64c0-8.8 7.2-16 16-16s16 7.2 16 16V95.9c0 0 0 .1 0 .1V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96c0 0 0 0 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16v55.9c0 0 0 .1 0 .1v80c0 13.3 10.7 24 24 24s24-10.7 24-24V160.1c0 0 0-.1 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16V332.9c-.1 .6-.1 1.3-.2 1.9c-3.4 69.7-59.3 125.6-129 129c-.6 0-1.3 .1-1.9 .2H296h-8.5c-55.2 0-108.1-21.9-147.1-60.9L52.7 315.3c-6.2-6.2-6.2-16.4 0-22.6s16.4-6.2 22.6 0L119 336.4c6.9 6.9 17.2 8.9 26.2 5.2s14.8-12.5 14.8-22.2V96c0-8.8 7.2-16 16-16c8.8 0 16 7.1 16 15.9V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96.1z">
+                                </path>
+                            </svg>
+                        </span>
+                            Explore more interactive results for dynamic scene reconstruction!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="vs_cut" class="section dynamic-section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full  panel-style">
+                    <p id="compare-description-cut" style="max-width: 90%; margin: 0 auto; text-align: center;">
+                        While CUT3R achieves better per-frame depth estimation, it is susceptible to dynamic objects,
+                        leading to misaligned static walls and unstable camera pose estimation.
+                        Additionally, ghosting artifacts arise as CUT3R lacks dynamic segmentation capability, causing points from different frames to be mixed.
+                    </p>
+                    <div id="wrapper" style="
+                            display: flex;
+                            flex-wrap: nowrap;
+                            justify-content: center;
+                            align-items: center;
+                            gap: 1em;
+                            width: 100%;
+                        ">
+                        <!-- Insert two iframes -->
+                        <div class="iframe-container">
+                            <iframe id="left-iframe-cut"
+                            src="https://Easi3R.github.io/build/?playbackPath=https://Easi3R.github.io/recordings/recording_dog-gooses-cut.viser&initDistanceScale=0.85&initHeightOffset=0.08"></iframe>
+                            <p style="text-align: center; font-size: 20px; font-weight: bold; flex: 1; margin-bottom: 10px;">CUT3R</p>
+                        </div>
+                        <div class="iframe-container">
+                            <iframe id="right-iframe-cut"
+                            src="https://Easi3R.github.io/build/?playbackPath=https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08"></iframe>
+                            <p style="text-align: center; font-size: 20px; font-weight: bold; flex: 1; margin-bottom: 10px;">Ours</p>
+                        </div>
+                    </div>
+                    
+                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; margin-bottom: 10px; max-width: 90%;">
+                        <img src="static/thumbs/dog-gooses.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-cut.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="While CUT3R achieves better per-frame depth estimation, it is susceptible to dynamic objects,
+                         leading to misaligned static walls and unstable camera pose estimation.
+                         Additionally, ghosting artifacts arise as CUT3R lacks dynamic segmentation capability, causing points from different frames to be mixed."
+                         class="thumbnail viser-thumbnail-cut" alt="dog-gooses" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/schoolgirls.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_schoolgirls-cut.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_schoolgirls-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="While CUT3R achieves better per-frame depth estimation, it is susceptible to dynamic objects,
+                         leading to misaligned static walls and unstable camera pose estimation.
+                         Additionally, ghosting artifacts arise as CUT3R lacks dynamic segmentation capability, causing points from different frames to be mixed."
+                         class="thumbnail viser-thumbnail-cut" alt="schoolgirls" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/sheep.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_sheep-cut.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_sheep-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="While CUT3R achieves better per-frame depth estimation, it is susceptible to dynamic objects,
+                         leading to misaligned static walls and unstable camera pose estimation.
+                         Additionally, ghosting artifacts arise as CUT3R lacks dynamic segmentation capability, causing points from different frames to be mixed."
+                         class="thumbnail viser-thumbnail-cut" alt="sheep" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/drift-chicane.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-cut.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="While CUT3R achieves better per-frame depth estimation, it is susceptible to dynamic objects,
+                         leading to misaligned static walls and unstable camera pose estimation.
+                         Additionally, ghosting artifacts arise as CUT3R lacks dynamic segmentation capability, causing points from different frames to be mixed."
+                         class="thumbnail viser-thumbnail-cut" alt="drift-chicane" style="cursor: pointer; width: 100px;">
+                    </div>
+
+                    <p style="text-align: center; font-size: 1em; padding: 0em; color: #555;">
+                        Results are downsampled <strong>10 times</strong> for efficient online rendering
+                    </p>
+                    <div class="hide-on-touchscreens" style="
+                        display: flex;
+                        justify-content: center;
+                        gap: 1.5em;
+                        padding-top: 0.5em;
+                    ">
+                        <div>
+                            <i class="ti ti-view-360-arrow"></i> <strong>Left-click</strong> and
+                            drag to rotate
+                        </div>
+                        <div>
+                            <i class="ti ti-arrows-move"></i> <strong>Right-click</strong> and
+                            drag or
+                            <strong>WASD</strong>
+                            to move
+                        </div>
+                        <div><i class="ti ti-zoom"></i> <strong>Scroll</strong> to zoom</div>
+                        <div><strong>Click <i class="fas fa-pause"></i></strong> to pause</div>
+                    </div>
+                    <button onclick="window.location.href='./interactive.html';" target="_blank"
+                        style="font-size: 20px; font-family: 'Arial', sans-serif; background-color: #92A8D1; color: white; margin: 20px auto; display: block; padding: 15px 15px; border: none; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-align: center; transition: all 0.3s ease; cursor: pointer;">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"
+                                style="fill: #ffffff">
+                                <path
+                                    d="M256 0c-25.3 0-47.2 14.7-57.6 36c-7-2.6-14.5-4-22.4-4c-35.3 0-64 28.7-64 64V261.5l-2.7-2.7c-25-25-65.5-25-90.5 0s-25 65.5 0 90.5L106.5 437c48 48 113.1 75 181 75H296h8c1.5 0 3-.1 4.5-.4c91.7-6.2 165-79.4 171.1-171.1c.3-1.5 .4-3 .4-4.5V160c0-35.3-28.7-64-64-64c-5.5 0-10.9 .7-16 2V96c0-35.3-28.7-64-64-64c-7.9 0-15.4 1.4-22.4 4C303.2 14.7 281.3 0 256 0zM240 96.1c0 0 0-.1 0-.1V64c0-8.8 7.2-16 16-16s16 7.2 16 16V95.9c0 0 0 .1 0 .1V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96c0 0 0 0 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16v55.9c0 0 0 .1 0 .1v80c0 13.3 10.7 24 24 24s24-10.7 24-24V160.1c0 0 0-.1 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16V332.9c-.1 .6-.1 1.3-.2 1.9c-3.4 69.7-59.3 125.6-129 129c-.6 0-1.3 .1-1.9 .2H296h-8.5c-55.2 0-108.1-21.9-147.1-60.9L52.7 315.3c-6.2-6.2-6.2-16.4 0-22.6s16.4-6.2 22.6 0L119 336.4c6.9 6.9 17.2 8.9 26.2 5.2s14.8-12.5 14.8-22.2V96c0-8.8 7.2-16 16-16c8.8 0 16 7.1 16 15.9V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96.1z">
+                                </path>
+                            </svg>
+                        </span>
+                            Explore more interactive results for dynamic scene reconstruction!
+                    </button>
+                </div>
+            </div>
+        </div><br>
+    </section>
+
+
+    <!-- <section class="section has-background-light">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <h2 class="title is-3">Method Overview</h2>
+                    <div class="content has-text-centered">
+                        <div>
+                            <img src="./static/images/method1_2-min.jpg" alt="Reconstruction"
+                                class="blend-img-background center-image" width="80%" loading="lazy" />
+                        </div>
+                        <div class="content has-text-justified">
+                            <p>
+                                Given a sequence of images as input, our method performs online dense 3D reconstruction.
+
+                                At the core of our method is a state representation that keeps updating as each new
+                                observation
+                                comes in.
+
+                                Given the current image, we first use a vit encoder to encode it into token
+                                representations.
+                                The image tokens then interact with the state tokens through a joint process of state
+                                update
+                                and
+                                state readout. The final outputs from state readout are the pointmaps and camera
+                                parameters
+                                for
+                                the current observation. At the same time, the state update module incorporates the
+                                current
+                                observation to update the state.
+
+                                We repeat the process for every image, and their outputs accumulate into dense scene
+                                reconstruction over time.
+                            </p>
+                        </div>
+
+                        <div>
+                            <img src="./static/images/method2_2-min.jpg" alt="Inference"
+                                class="blend-img-background center-image" width="80%" loading="lazy" />
+                        </div>
+                        <div class="level-set has-text-justified">
+                            <p>
+                                Not only can our method reconstructs the scene given image observations, it can also
+                                infer
+                                new
+                                structures unseen by the input images.
+                                Given a query camera as shown as the blue camera, we use its raymap to query the current
+                                state
+                                to read out its corresponding point map.
+                                Adding this inferred point map to the existing reconstruction makes the reconstruction
+                                more
+                                complete.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+
+
+
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <h2 class="title is-3">Secrets Behind DUSt3R</h2>
+                    <p style="max-width: 90%; margin: 0 auto; text-align: center;">
+                        Our key insight is that DUSt3R implicitly learns rigid view transformations through its cross-attention layers.
+                        It assigns low attention values to tokens that violate epipolar geometry constraints.
+                        We propose to disentangle motions from the attention layers by aggregating cross-attention outputs across spatial and temporal dimensions.
+                    </p>
+            </div>
+        </div>
+        <script defer src="./static/js/attn-vis.js"></script>
+
+    <!-- Attention Visualization Section -->
+    <section id="attn-vis" class="section dynamic-section" style="display: block;">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full panel-style">
+                    <h2 class="title is-4">Spatial and Temporal Attention Mechanism</h2>
+                    <p style="max-width: 90%; margin: 0 auto; text-align: justify;">
+                        To this end, we identify attention activations attributed to object motion. We infer the dynamic attention map for frame \\(a\\) by computing the joint attention using the element-wise product:
+                    </p>
+                    <p style="max-width: 90%; margin: 0 auto; text-align: center;">
+                       
+                        <br>
+                       \\( \\mathbf{A}^{a=\\text{dyn}} = (1-\\mathbf{A}^{a=\\text{src}}_{\\mu}) \\cdot \\mathbf{A}^{a=\\text{src}}_{\\sigma} \\cdot \\mathbf{A}^{a=\\text{ref}}_{\\mu} \\cdot (1-\\mathbf{A}^{a=\\text{ref}}_{\\sigma}) \\)
+                        <br>
+
+                    </p>
+                    <br>
+                    <div style="position: relative; width: 95%; margin: 0 auto;">
+                        <video id="attn-video" width="100%" height="auto" preload="none" style="display: none; position: absolute; z-index: 10; top: 0; left: 0; transform: translateY(45%);" autoplay muted loop>
+                            <source id="attn-video-source" src="" type="video/mp4">
+                        </video>
+                        <img src="static/images/attn_label.png" alt="Attention Labels" style="width: 100%; position: relative; z-index: 1; transform: translateY(0%);">
+                    </div>
+                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: auto; margin-bottom: 10px; max-width: 100%;">
+                        <img src="static/thumbs/boxing-fisheye.jpg" data-video="static/videos/attn/boxing-fisheye.mp4" class="thumbnail attn-thumbnail" alt="boxing-fisheye" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/dance-jump.jpg" data-video="static/videos/attn/dance-jump.mp4" class="thumbnail attn-thumbnail" alt="dance-jump" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/koala.jpg" data-video="static/videos/attn/koala.mp4" class="thumbnail attn-thumbnail" alt="koala" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/car-shadow.jpg" data-video="static/videos/attn/car-shadow.mp4" class="thumbnail attn-thumbnail" alt="car-shadow" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/swing.jpg" data-video="static/videos/attn/swing.mp4" class="thumbnail attn-thumbnail" alt="swing" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/bear.jpg" data-video="static/videos/attn/bear.mp4" class="thumbnail attn-thumbnail" alt="bear" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/hike.jpg" data-video="static/videos/attn/hike.mp4" class="thumbnail attn-thumbnail" alt="hike" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/dog-gooses.jpg" data-video="static/videos/attn/dog-gooses.mp4" class="thumbnail attn-thumbnail" alt="dog-gooses" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/stunt.jpg" data-video="static/videos/attn/stunt.mp4" class="thumbnail attn-thumbnail" alt="stunt" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/horsejump-high.jpg" data-video="static/videos/attn/horsejump-high.mp4" class="thumbnail attn-thumbnail" alt="horsejump-high" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/car-turn.jpg" data-video="static/videos/attn/car-turn.mp4" class="thumbnail attn-thumbnail" alt="car-turn" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/soapbox.jpg" data-video="static/videos/attn/soapbox.mp4" class="thumbnail attn-thumbnail" alt="soapbox" style="cursor: pointer; width: 100px;">
+                    </div>
+                </div>
+            </div>
+        </div><br>
+    </section>
+
+    <script defer src="./static/js/cluster-vis.js"></script>
+
+
+    <!--  Cluster Visualization Section -->
+    <section id="cluster-vis" class="section dynamic-section" style="display: block;">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full panel-style">
+                    <h2 class="title is-4">Cross-frame Feature Clustering</h2>
+                    <p style="max-width: 90%; margin: 0 auto; text-align: justify;">
+                        We observe that features from the DUSt3R encoder exhibit temporal consistency, with cluster assignments \\( {C}^t \\) from K-means remaining stable across frames.
+                        This improves temporal consistency in dynamic segmentation \\( \\mathbf{A}^{t=\\text{dyn}}_{\\text{fuse}} \\) through clustering-guided temporal fusing.
+                    </p>
+                    <br>
+                    <div style="position: relative; width: 95%; margin: 0 auto;">
+                        <div style="display: flex; justify-content: space-between; margin-top: auto; align-items: center;">
+                            <span style="flex: 1; text-align: center; font-size: 16px; font-weight: bold;">Input Video</span>
+                            <span style="flex: 1; text-align: center; font-size: 16px; font-weight: bold;">Dynamic Attention \\( \\mathbf{A}^{t=\\text{dyn}} \\)</span>
+                            <span style="flex: 1; text-align: center; font-size: 16px; font-weight: bold;">Cluster Assignment \\( {C}^t \\)</span>
+                            <span style="flex: 1; text-align: center; font-size: 16px; font-weight: bold;">Fused Dynamic Attention \\( \\mathbf{A}^{t=\\text{dyn}}_{\\text{fuse}} \\)</span>
+                        </div>
+                        <video id="cluster-video" width="100%" height="auto" preload="none" style="display: none; position: relative; top: 0; left: 0;" autoplay muted loop>
+                            <source id="cluster-video-source" src="" type="video/mp4">
+                        </video>
+
+                    </div>
+                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; margin-bottom: 10px; max-width: 100%;">
+                        <img src="static/thumbs/dogs-scale.jpg" data-video="static/videos/cluster/dogs-scale.mp4" class="thumbnail cluster-thumbnail" alt="dogs-scale" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/tennis.jpg" data-video="static/videos/cluster/tennis.mp4" class="thumbnail cluster-thumbnail" alt="tennis" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/drone.jpg" data-video="static/videos/cluster/drone.mp4" class="thumbnail cluster-thumbnail" alt="drone" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/stroller.jpg" data-video="static/videos/cluster/stroller.mp4" class="thumbnail cluster-thumbnail" alt="stroller" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/snowboard.jpg" data-video="static/videos/cluster/snowboard.mp4" class="thumbnail cluster-thumbnail" alt="snowboard" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/bike-packing.jpg" data-video="static/videos/cluster/bike-packing.mp4" class="thumbnail cluster-thumbnail" alt="bike-packing" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/lucia.jpg" data-video="static/videos/cluster/lucia.mp4" class="thumbnail cluster-thumbnail" alt="lucia" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/koala.jpg" data-video="static/videos/cluster/koala.mp4" class="thumbnail cluster-thumbnail" alt="koala" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/breakdance-flare.jpg" data-video="static/videos/cluster/breakdance-flare.mp4" class="thumbnail cluster-thumbnail" alt="breakdance-flare" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/judo.jpg" data-video="static/videos/cluster/judo.mp4" class="thumbnail cluster-thumbnail" alt="judo" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/hike.jpg" data-video="static/videos/cluster/hike.mp4" class="thumbnail cluster-thumbnail" alt="hike" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/bear.jpg" data-video="static/videos/cluster/bear.mp4" class="thumbnail cluster-thumbnail" alt="bear" style="cursor: pointer; width: 100px;">
+                    </div>
+                </div>
+            </div>
+        </div><br>
+    </section>
+
+
+    <script defer src="./static/js/mask-vis.js"></script>
+
+    <!-- Mask Visualization Section -->
+    <section id="mask-vis" class="section dynamic-section" style="display: block;">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full panel-style">
+                    <h2 class="title is-4">Dynamic Object Segmentation</h2>
+                    <p style="max-width: 90%; margin: 0 auto; text-align: left;">
+                        The refined dynamic attention map 
+                        \\( \\mathbf{A}^{t=\\text{dyn}}_{\\text{fuse}} \\in \\mathbb{R}^{h \\times w} \\) 
+                        is used to infer the dynamic object segmentation by
+                        \\( \\mathbf{M}^{t}(x,y) = 𝟙[\\mathbf{A}^{t=\\text{dyn}}_{\\text{fuse}}(x,y) > \\alpha] \\), 
+                        where \\( \\alpha \\) is an automatic image thresholding using <a href="https://en.wikipedia.org/wiki/Otsu%27s_method">Otsu's method</a>.
+                    </p>
+                    <br>
+                    <div style="position: relative; width: 95%; margin: 0 auto;">
+                        <div style="display: flex; justify-content: space-between; margin-top: auto; align-items: center;">
+                            <span style="flex: 1; text-align: center; font-size: 16px; font-weight: bold;">Input Video</span>
+                            <span style="flex: 1; text-align: center; font-size: 16px; font-weight: bold;">MonST3R</span>
+                            <span style="flex: 1; text-align: center; font-size: 16px; font-weight: bold;">DAS3R</span>
+                            <span style="flex: 1; text-align: center; font-size: 16px; font-weight: bold;">Ours</span>
+                            <span style="flex: 1; text-align: center; font-size: 16px; font-weight: bold;">GT</span>
+                        </div>
+                        <video id="mask-video" width="100%" height="auto" preload="none" style="display: none; position: relative; top: 0; left: 0;" autoplay muted loop>
+                            <source id="mask-video-source" src="" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; margin-bottom: 10px; max-width: 100%;">
+                        <img src="static/thumbs/koala.jpg" data-video="static/videos/mask/koala.mp4" class="thumbnail mask-thumbnail" alt="koala" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/mbike-trick.jpg" data-video="static/videos/mask/mbike-trick.mp4" class="thumbnail mask-thumbnail" alt="mbike-trick" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/schoolgirls.jpg" data-video="static/videos/mask/schoolgirls.mp4" class="thumbnail mask-thumbnail" alt="schoolgirls" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/dog-gooses.jpg" data-video="static/videos/mask/dog-gooses.mp4" class="thumbnail mask-thumbnail" alt="dog-gooses" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/goat.jpg" data-video="static/videos/mask/goat.mp4" class="thumbnail mask-thumbnail" alt="goat" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/rhino.jpg" data-video="static/videos/mask/rhino.mp4" class="thumbnail mask-thumbnail" alt="rhino" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/crossing.jpg" data-video="static/videos/mask/crossing.mp4" class="thumbnail mask-thumbnail" alt="crossing" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/elephant.jpg" data-video="static/videos/mask/elephant.mp4" class="thumbnail mask-thumbnail" alt="elephant" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/drift-chicane.jpg" data-video="static/videos/mask/drift-chicane.mp4" class="thumbnail mask-thumbnail" alt="drift-chicane" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/bear.jpg" data-video="static/videos/mask/bear.mp4" class="thumbnail mask-thumbnail" alt="bear" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/judo.jpg" data-video="static/videos/mask/judo.mp4" class="thumbnail mask-thumbnail" alt="judo" style="cursor: pointer; width: 100px;">
+                        <img src="static/thumbs/bike-packing.jpg" data-video="static/videos/mask/bike-packing.mp4" class="thumbnail mask-thumbnail" alt="bike-packing" style="cursor: pointer; width: 100px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    </section>
+
+    <!-- <script defer src="./static/js/video-compare.js"></script> -->
+
+
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths"><br><br>
+                    <h2 class="title is-3">Acknowledgements</h2>
+                    <div class="content has-text-justified">
+                        We thank the members of Inception3D and Endless AI Labs for their help and discussions. 
+                        Xingyu Chen and Yue Chen are funded by the Westlake Education Foundation.
+                        Yuliang Xiu also received funding from the Max Planck Institute for Intelligent Systems.
+                        Anpei Chen and Andreas Geiger are supported by the ERC Starting Grant LEGO-3D (850533) and DFG EXC number 2064/1 - project number 390727645.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section class="section" id="BibTeX">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-justified">
+                <div class="column is-four-fifths">
+
+                    <h2 class="title">BibTeX</h2>
+                    <pre><code>
+    @article{chen2025easi3r,
+        title={Easi3R: Estimating Disentangled Motion from DUSt3R Without Training},
+        author={Chen, Xingyu and Chen, Yue and Xiu, Yuliang and Geiger, Andreas and Chen, Anpei},
+        journal={arXiv preprint arXiv:2503.xxxxxx},
+        year={2025}
+        }
+                    </code></pre>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="footer">
+        <div align="center" class="container">
+            <div class="columns is-centered">
+                <div class="content">
+                    Design borrowed from <a href="https://github.com/nerfies/nerfies.github.io">nerfies</a>.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>
