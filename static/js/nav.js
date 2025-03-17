@@ -6,7 +6,7 @@ function showSection(id) {
             <div class="columns is-centered has-text-centered">
                 <div class="column is-full  panel-style">
                     <p id="compare-description" style="max-width: 100%; margin: 0 auto; text-align: center;">
-                        MonST3R suffers from structure misalignment and ghosting artifacts due to under-segmentation of the dog and goose.
+                        Our method achieves superior structure alignment and fewer artifacts, owing to the robust dynamic segmentation estimation.
                     </p>
                     <div id="wrapper" style="
                             display: flex;
@@ -33,7 +33,7 @@ function showSection(id) {
                         <img src="static/thumbs/dog-gooses.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-mon.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
                          data-right-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
-                         data-description="MonST3R suffers from structure misalignment and ghosting artifacts due to under-segmentation of the dog and goose."
+                         data-description="Our method achieves superior structure alignment and fewer artifacts, owing to the robust dynamic segmentation estimation."
                          class="thumbnail viser-thumbnail active" alt="dog-gooses" style="cursor: pointer; width: 100px;">
                          <img src="static/thumbs/schoolgirls.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_schoolgirls-mon.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
@@ -43,12 +43,12 @@ function showSection(id) {
                          <img src="static/thumbs/sheep.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_sheep-mon.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
                          data-right-viser="https://Easi3R.github.io/recordings/recording_sheep-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
-                         data-description="MonST3R suffers from structure misalignment and ghosting artifacts due to under-segmentation of sheep."
+                         data-description="Our method achieves superior structure alignment and fewer artifacts, owing to the robust dynamic segmentation estimation."
                          class="thumbnail viser-thumbnail" alt="sheep" style="cursor: pointer; width: 100px;">
                          <img src="static/thumbs/drift-chicane.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-mon.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
                          data-right-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
-                         data-description="MonST3R suffers from ghosting artifacts due to under-segmentation of the drift chicane."
+                         data-description="Our method achieves superior structure alignment and fewer artifacts, owing to the robust dynamic segmentation estimation."
                          class="thumbnail viser-thumbnail" alt="drift-chicane" style="cursor: pointer; width: 100px;">
                     </div>
 
@@ -112,7 +112,7 @@ function showSection(id) {
             <div class="columns is-centered has-text-centered">
                 <div class="column is-full  panel-style">
                     <p id="compare-description-das" style="max-width: 100%; margin: 0 auto; text-align: center;">
-                        DAS3R suffers from ghosting artifacts due to inaccuracies in dynamic segmentation estimation.
+                        Our method provides clean reconstructions, while DAS3R suffers from ghosting artifacts due to inaccuracies in dynamic segmentation estimation.
                         For example, it under-segments the sheep while over-segmenting the tree.
                     </p>
                     <div id="wrapper" style="
@@ -150,12 +150,12 @@ function showSection(id) {
                          <img src="static/thumbs/sheep.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_sheep-das.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
                          data-right-viser="https://Easi3R.github.io/recordings/recording_sheep-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
-                         data-description="DAS3R suffers from ghosting artifacts due to inaccuracies in dynamic segmentation estimation. For example, it under-segments the sheep while over-segmenting the tree."
+                         data-description="Our method provides clean reconstructions, while DAS3R suffers from ghosting artifacts due to inaccuracies in dynamic segmentation estimation. For example, it under-segments the sheep while over-segmenting the tree."
                          class="thumbnail viser-thumbnail-das" alt="sheep" style="cursor: pointer; width: 100px;">
                          <img src="static/thumbs/drift-chicane.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-das.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
                          data-right-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
-                         data-description="DAS3R suffers from ghosting artifacts due to inaccuracies in dynamic segmentation estimation. For example, it under-segments the drift chicane while over-segmenting the building."
+                         data-description="Our method provides clean reconstructions, while DAS3R suffers from ghosting artifacts due to inaccuracies in dynamic segmentation estimation. For example, it under-segments the drift chicane while over-segmenting the building."
                          class="thumbnail viser-thumbnail-das" alt="drift-chicane" style="cursor: pointer; width: 100px;">
                     </div>
 
@@ -202,9 +202,7 @@ function showSection(id) {
             <div class="columns is-centered has-text-centered">
                 <div class="column is-full  panel-style">
                     <p id="compare-description-cut" style="max-width: 100%; margin: 0 auto; text-align: center;">
-                        While CUT3R achieves better per-frame depth estimation, it is susceptible to dynamic objects,
-                        leading to misaligned static walls and unstable camera pose estimation.
-                        Additionally, ghosting artifacts arise as CUT3R lacks dynamic segmentation capability, causing points from different frames to be mixed.
+                        CUT3R lacks support for dynamic mask estimation, leading to the blending of points from different frames when ground truth masks are not used. Additionally, our approach demonstrates greater reliability in achieving accurate camera poses.
                     </p>
                     <div id="wrapper" style="
                             display: flex;
@@ -231,30 +229,22 @@ function showSection(id) {
                         <img src="static/thumbs/dog-gooses.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-cut.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
                          data-right-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
-                         data-description="While CUT3R achieves better per-frame depth estimation, it is susceptible to dynamic objects,
-                         leading to misaligned static walls and unstable camera pose estimation.
-                         Additionally, ghosting artifacts arise as CUT3R lacks dynamic segmentation capability, causing points from different frames to be mixed."
+                         data-description="CUT3R lacks support for dynamic mask estimation, leading to the blending of points from different frames when ground truth masks are not used. Additionally, our approach demonstrates greater reliability in achieving accurate camera poses."
                          class="thumbnail viser-thumbnail-cut" alt="dog-gooses" style="cursor: pointer; width: 100px;">
                          <img src="static/thumbs/schoolgirls.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_schoolgirls-cut.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
                          data-right-viser="https://Easi3R.github.io/recordings/recording_schoolgirls-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
-                         data-description="While CUT3R achieves better per-frame depth estimation, it is susceptible to dynamic objects,
-                         leading to misaligned static walls and unstable camera pose estimation.
-                         Additionally, ghosting artifacts arise as CUT3R lacks dynamic segmentation capability, causing points from different frames to be mixed."
+                         data-description="CUT3R lacks support for dynamic mask estimation, leading to the blending of points from different frames when ground truth masks are not used. Additionally, our approach demonstrates greater reliability in achieving accurate camera poses."
                          class="thumbnail viser-thumbnail-cut" alt="schoolgirls" style="cursor: pointer; width: 100px;">
                          <img src="static/thumbs/sheep.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_sheep-cut.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
                          data-right-viser="https://Easi3R.github.io/recordings/recording_sheep-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
-                         data-description="While CUT3R achieves better per-frame depth estimation, it is susceptible to dynamic objects,
-                         leading to misaligned static walls and unstable camera pose estimation.
-                         Additionally, ghosting artifacts arise as CUT3R lacks dynamic segmentation capability, causing points from different frames to be mixed."
+                         data-description="CUT3R lacks support for dynamic mask estimation, leading to the blending of points from different frames when ground truth masks are not used. Additionally, our approach demonstrates greater reliability in achieving accurate camera poses."
                          class="thumbnail viser-thumbnail-cut" alt="sheep" style="cursor: pointer; width: 100px;">
                          <img src="static/thumbs/drift-chicane.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-cut.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
                          data-right-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
-                         data-description="While CUT3R achieves better per-frame depth estimation, it is susceptible to dynamic objects,
-                         leading to misaligned static walls and unstable camera pose estimation.
-                         Additionally, ghosting artifacts arise as CUT3R lacks dynamic segmentation capability, causing points from different frames to be mixed."
+                         data-description="CUT3R lacks support for dynamic mask estimation, leading to the blending of points from different frames when ground truth masks are not used. Additionally, our approach demonstrates greater reliability in achieving accurate camera poses."
                          class="thumbnail viser-thumbnail-cut" alt="drift-chicane" style="cursor: pointer; width: 100px;">
                     </div>
 
