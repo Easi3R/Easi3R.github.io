@@ -20,6 +20,14 @@ document.addEventListener('DOMContentLoaded', function() {
         'compare-description-cut'
     );
     
+    setupTripleFrameSection(
+        'disentangle-iframe-full',
+        'disentangle-iframe-static',
+        'disentangle-iframe-dynamic',
+        '.disentangle-thumbnail',
+        'disentangle-description'
+    );
+
     const style = document.createElement('style');
     style.innerHTML = `
         .viser-thumbnail, .viser-thumbnail-das, .viser-thumbnail-cut {
@@ -80,6 +88,60 @@ document.addEventListener('DOMContentLoaded', function() {
                 rightIframe.src = `https://Easi3R.github.io/build/?playbackPath=${rightViser}`;
                 
                 compareDescription.textContent = description;
+            });
+        });
+    }
+    
+    function setupTripleFrameSection(fullIframeId, staticIframeId, dynamicIframeId, thumbnailSelector, descriptionId) {
+        const fullIframe = document.getElementById(fullIframeId);
+        const staticIframe = document.getElementById(staticIframeId);
+        const dynamicIframe = document.getElementById(dynamicIframeId);
+        const thumbnails = document.querySelectorAll(thumbnailSelector);
+        const description = document.getElementById(descriptionId);
+        
+        if (!fullIframe || !staticIframe || !dynamicIframe || thumbnails.length === 0) {
+            return;
+        }
+        
+        thumbnails.forEach(thumbnail => {
+            thumbnail.style.border = '2px solid #fff';
+        });
+        
+        thumbnails[0].style.border = '3px solid #92A8D1';
+        
+        const fullViser = thumbnails[0].getAttribute('data-full-viser');
+        const staticViser = thumbnails[0].getAttribute('data-static-viser');
+        const dynamicViser = thumbnails[0].getAttribute('data-dynamic-viser');
+        const desc = thumbnails[0].getAttribute('data-description');
+        
+        fullIframe.src = `https://Easi3R.github.io/build/?playbackPath=${fullViser}`;
+        staticIframe.src = `https://Easi3R.github.io/build/?playbackPath=${staticViser}`;
+        dynamicIframe.src = `https://Easi3R.github.io/build/?playbackPath=${dynamicViser}`;
+        
+        if (description) {
+            description.textContent = desc;
+        }
+        
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', function() {
+                thumbnails.forEach(t => {
+                    t.style.border = '2px solid #fff';
+                });
+                
+                this.style.border = '3px solid #92A8D1';
+                
+                const fullViser = this.getAttribute('data-full-viser');
+                const staticViser = this.getAttribute('data-static-viser');
+                const dynamicViser = this.getAttribute('data-dynamic-viser');
+                const desc = this.getAttribute('data-description');
+                
+                fullIframe.src = `https://Easi3R.github.io/build/?playbackPath=${fullViser}`;
+                staticIframe.src = `https://Easi3R.github.io/build/?playbackPath=${staticViser}`;
+                dynamicIframe.src = `https://Easi3R.github.io/build/?playbackPath=${dynamicViser}`;
+                
+                if (description) {
+                    description.textContent = desc;
+                }
             });
         });
     }

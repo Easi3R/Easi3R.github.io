@@ -109,9 +109,9 @@ a, a:visited {
   margin: 0 10px;
 }
 #authors sup {
-  font-size: 14px; /* 调整上标字体大小 */
-  margin-right: -2px; /* 将上标与<a>标签靠近一些 */
-  margin-left: 1px; /* 将上标与<a>标签靠近一些 */
+  font-size: 14px; 
+  margin-right: -2px; 
+  margin-left: 1px; 
 }
 #authors .institution {
   display: block;
@@ -119,16 +119,16 @@ a, a:visited {
   margin-top: 5px;
 }
 #authors .institution a {
-  margin-right: 15px; /* 添加链接间距 */
-  color: black; /* 修改链接字体颜色为黑色 */
-  text-decoration: underline gray; /* 修改链接下划线为灰色 */
+  margin-right: 15px; 
+  color: black; 
+  text-decoration: underline gray;
 }
 #authors .conference {
   text-align: center;
   font-size: 28px;
   font-weight: 300;
-  color: black; /* 修改链接字体颜色为黑色 */
-  margin-bottom: -20px; /* 调整会议名称与作者之间的间距 */
+  color: black; 
+  margin-bottom: -20px; 
 }
 #authors a {
   margin: 0 10px;
