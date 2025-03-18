@@ -29,7 +29,7 @@ function showSection(id) {
                         </div>
                     </div>
                     
-                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; margin-bottom: 10px; max-width: 100%;">
+                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 5px; margin-bottom: 20px; max-width: 100%;">
                         <img src="static/thumbs/dog-gooses.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-mon.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
                          data-right-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
@@ -136,7 +136,7 @@ function showSection(id) {
                         </div>
                     </div>
                     
-                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; margin-bottom: 10px; max-width: 100%;">
+                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 5px; margin-bottom: 20px; max-width: 100%;">
                         <img src="static/thumbs/dog-gooses.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-das.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
                          data-right-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
@@ -225,7 +225,7 @@ function showSection(id) {
                         </div>
                     </div>
                     
-                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; margin-bottom: 10px; max-width: 100%;">
+                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 5px; margin-bottom: 20px; max-width: 100%;">
                         <img src="static/thumbs/dog-gooses.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-cut.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
                          data-right-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
