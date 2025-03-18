@@ -292,7 +292,8 @@
                 <div class="column is-four-fifths">
                     <h2 class="title is-3">Disentangled Motion</h2>
                     <p style="max-width: 100%; margin: 0 auto; text-align: center;">
-                        We introduce the spatial and temporal attention mechanism behind DUSt3R, which enables robust dynamic object segmentation. This segmentation efficiently disentangles object and camera motion, allowing DUSt3R to be adapted for 4D reconstruction.
+                        We introduce the spatial and temporal attention mechanism behind DUSt3R, which enables robust dynamic object segmentation. <br>
+                        This segmentation efficiently disentangles object and camera motion, allowing DUSt3R to be adapted for 4D reconstruction.
                     </p>
                 </div>
             </div>
@@ -310,6 +311,7 @@
                                 align-items: center;
                                 gap: 1em;
                                 width: 100%;
+                                margin-bottom: 20px;
                             ">
                             <!-- Insert two iframes -->
                             <div class="iframe-container">
@@ -410,7 +412,7 @@
                         Instead of using <strong>GT dynamic masks</strong>, we use the <strong>estimated</strong> dynamic masks to filter out points at other timestamps.<br>
                         Click tabs below to explore the results for each baseline. 
                     </p>
-                    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
+                    <div style="display: flex; align-items: center; justify-content: center;">
                         <span style="margin-right: 10px; font-weight: bold; font-size: 16px;">Comparison Method:</span>
                         <nav style="flex: 1;">
                             <ul>
@@ -706,7 +708,7 @@
                             <img src="./static/images/fig_pipe.png" alt="Reconstruction"
                                 class="blend-img-background center-image" width="100%" loading="lazy" />
                         </div>
-                        <div class="content has-text-justified">
+                        <div class="content has-text-justified" style="margin-top: 15px;">
                             <p>
                                 <strong>DUSt3R</strong> and our <strong>Easi3R</strong> adaptation. 
                                 DUSt3R encodes two images \( I^a, I^b \) into feature tokens 
