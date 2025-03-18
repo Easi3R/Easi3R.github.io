@@ -2,10 +2,11 @@ function showSection(id) {
     // Define content to be loaded dynamically for each section
     const contentMap = {
         'vs_mon': `
-        <div class="container is-max-desktop">
+<div class="container is-max-desktop">
             <div class="columns is-centered has-text-centered">
                 <div class="column is-full  panel-style">
-                    <p id="compare-description" style="max-width: 100%; margin: 0 auto; text-align: center;">
+                    <p id="compare-description" style="max-width: 90%; margin: 0 auto; text-align: center;">
+                        <!-- MonST3R suffers from structure misalignment and ghosting artifacts due to under-segmentation of the dog and goose. -->
                         Our method achieves superior structure alignment and fewer artifacts, owing to the robust dynamic segmentation estimation.
                     </p>
                     <div id="wrapper" style="
@@ -43,12 +44,12 @@ function showSection(id) {
                          <img src="static/thumbs/sheep.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_sheep-mon.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
                          data-right-viser="https://Easi3R.github.io/recordings/recording_sheep-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
-                         data-description="Our method achieves superior structure alignment and fewer artifacts, owing to the robust dynamic segmentation estimation."
+                         data-description="MonST3R suffers from structure misalignment and ghosting artifacts due to under-segmentation of sheep."
                          class="thumbnail viser-thumbnail" alt="sheep" style="cursor: pointer; width: 100px;">
                          <img src="static/thumbs/drift-chicane.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-mon.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
                          data-right-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
-                         data-description="Our method achieves superior structure alignment and fewer artifacts, owing to the robust dynamic segmentation estimation."
+                         data-description="MonST3R suffers from ghosting artifacts due to under-segmentation of the drift chicane."
                          class="thumbnail viser-thumbnail" alt="drift-chicane" style="cursor: pointer; width: 100px;">
                     </div>
 
@@ -74,18 +75,6 @@ function showSection(id) {
                         <div><i class="ti ti-zoom"></i> <strong>Scroll</strong> to zoom</div>
                         <div><strong>Click <i class="fas fa-pause"></i></strong> to pause</div>
                     </div>
-                    <button onclick="window.location.href='./interactive.html';" target="_blank"
-                        style="font-size: 20px; font-family: 'Arial', sans-serif; background-color: #92A8D1; color: white; margin: 20px auto; display: block; padding: 15px 15px; border: none; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-align: center; transition: all 0.3s ease; cursor: pointer;">
-                        <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"
-                                style="fill: #ffffff">
-                                <path
-                                    d="M256 0c-25.3 0-47.2 14.7-57.6 36c-7-2.6-14.5-4-22.4-4c-35.3 0-64 28.7-64 64V261.5l-2.7-2.7c-25-25-65.5-25-90.5 0s-25 65.5 0 90.5L106.5 437c48 48 113.1 75 181 75H296h8c1.5 0 3-.1 4.5-.4c91.7-6.2 165-79.4 171.1-171.1c.3-1.5 .4-3 .4-4.5V160c0-35.3-28.7-64-64-64c-5.5 0-10.9 .7-16 2V96c0-35.3-28.7-64-64-64c-7.9 0-15.4 1.4-22.4 4C303.2 14.7 281.3 0 256 0zM240 96.1c0 0 0-.1 0-.1V64c0-8.8 7.2-16 16-16s16 7.2 16 16V95.9c0 0 0 .1 0 .1V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96c0 0 0 0 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16v55.9c0 0 0 .1 0 .1v80c0 13.3 10.7 24 24 24s24-10.7 24-24V160.1c0 0 0-.1 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16V332.9c-.1 .6-.1 1.3-.2 1.9c-3.4 69.7-59.3 125.6-129 129c-.6 0-1.3 .1-1.9 .2H296h-8.5c-55.2 0-108.1-21.9-147.1-60.9L52.7 315.3c-6.2-6.2-6.2-16.4 0-22.6s16.4-6.2 22.6 0L119 336.4c6.9 6.9 17.2 8.9 26.2 5.2s14.8-12.5 14.8-22.2V96c0-8.8 7.2-16 16-16c8.8 0 16 7.1 16 15.9V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96.1z">
-                                </path>
-                            </svg>
-                        </span>
-                            Explore more interactive results for dynamic scene reconstruction!
-                    </button>
                     <script>
                         // Get the paragraph element
                         var para = document.getElementById('click-interactive');
@@ -101,8 +90,6 @@ function showSection(id) {
                             para.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)'; // Reset shadow
                         });
                     </script>
-                    <!-- <p> See more dynamic reconstruction results on DAVIS dataset in our <a href="./gallery.html">gallery</a>.</p> -->
-
                 </div>
             </div>
         </div>
@@ -111,7 +98,7 @@ function showSection(id) {
         <div class="container is-max-desktop">
             <div class="columns is-centered has-text-centered">
                 <div class="column is-full  panel-style">
-                    <p id="compare-description-das" style="max-width: 100%; margin: 0 auto; text-align: center;">
+                    <p id="compare-description-das" style="max-width: 90%; margin: 0 auto; text-align: center;">
                         Our method provides clean reconstructions, while DAS3R suffers from ghosting artifacts due to inaccuracies in dynamic segmentation estimation.
                         For example, it under-segments the sheep while over-segmenting the tree.
                     </p>
@@ -140,12 +127,12 @@ function showSection(id) {
                         <img src="static/thumbs/dog-gooses.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-das.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
                          data-right-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
-                         data-description="DAS3R suffers from structure misalignment and ghosting artifacts due to inaccuracies in dynamic segmentation estimation. For example, it under-segments the dog and goose."
+                         data-description="Our method provides clean reconstructions, while DAS3R suffers from structure misalignment and ghosting artifacts due to inaccuracies in dynamic segmentation estimation. For example, it under-segments the dog and goose."
                          class="thumbnail viser-thumbnail-das" alt="dog-gooses" style="cursor: pointer; width: 100px;">
                          <img src="static/thumbs/schoolgirls.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_schoolgirls-das.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
                          data-right-viser="https://Easi3R.github.io/recordings/recording_schoolgirls-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
-                         data-description="DAS3R suffers from structure misalignment with over-segmentation of walls."
+                         data-description="Our method provides clean reconstructions, while DAS3R suffers from structure misalignment with over-segmentation of walls."
                          class="thumbnail viser-thumbnail-das" alt="schoolgirls" style="cursor: pointer; width: 100px;">
                          <img src="static/thumbs/sheep.jpg" 
                          data-left-viser="https://Easi3R.github.io/recordings/recording_sheep-das.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
@@ -181,18 +168,6 @@ function showSection(id) {
                         <div><i class="ti ti-zoom"></i> <strong>Scroll</strong> to zoom</div>
                         <div><strong>Click <i class="fas fa-pause"></i></strong> to pause</div>
                     </div>
-                    <button onclick="window.location.href='./interactive.html';" target="_blank"
-                        style="font-size: 20px; font-family: 'Arial', sans-serif; background-color: #92A8D1; color: white; margin: 20px auto; display: block; padding: 15px 15px; border: none; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-align: center; transition: all 0.3s ease; cursor: pointer;">
-                        <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"
-                                style="fill: #ffffff">
-                                <path
-                                    d="M256 0c-25.3 0-47.2 14.7-57.6 36c-7-2.6-14.5-4-22.4-4c-35.3 0-64 28.7-64 64V261.5l-2.7-2.7c-25-25-65.5-25-90.5 0s-25 65.5 0 90.5L106.5 437c48 48 113.1 75 181 75H296h8c1.5 0 3-.1 4.5-.4c91.7-6.2 165-79.4 171.1-171.1c.3-1.5 .4-3 .4-4.5V160c0-35.3-28.7-64-64-64c-5.5 0-10.9 .7-16 2V96c0-35.3-28.7-64-64-64c-7.9 0-15.4 1.4-22.4 4C303.2 14.7 281.3 0 256 0zM240 96.1c0 0 0-.1 0-.1V64c0-8.8 7.2-16 16-16s16 7.2 16 16V95.9c0 0 0 .1 0 .1V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96c0 0 0 0 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16v55.9c0 0 0 .1 0 .1v80c0 13.3 10.7 24 24 24s24-10.7 24-24V160.1c0 0 0-.1 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16V332.9c-.1 .6-.1 1.3-.2 1.9c-3.4 69.7-59.3 125.6-129 129c-.6 0-1.3 .1-1.9 .2H296h-8.5c-55.2 0-108.1-21.9-147.1-60.9L52.7 315.3c-6.2-6.2-6.2-16.4 0-22.6s16.4-6.2 22.6 0L119 336.4c6.9 6.9 17.2 8.9 26.2 5.2s14.8-12.5 14.8-22.2V96c0-8.8 7.2-16 16-16c8.8 0 16 7.1 16 15.9V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96.1z">
-                                </path>
-                            </svg>
-                        </span>
-                            Explore more interactive results for dynamic scene reconstruction!
-                    </button>
                 </div>
             </div>
         </div>
@@ -201,7 +176,10 @@ function showSection(id) {
         <div class="container is-max-desktop">
             <div class="columns is-centered has-text-centered">
                 <div class="column is-full  panel-style">
-                    <p id="compare-description-cut" style="max-width: 100%; margin: 0 auto; text-align: center;">
+                    <p id="compare-description-cut" style="max-width: 90%; margin: 0 auto; text-align: center;">
+                        <!-- While CUT3R achieves better per-frame depth estimation, it is susceptible to dynamic objects,
+                        leading to misaligned static walls and unstable camera pose estimation.
+                        Additionally, ghosting artifacts arise as CUT3R lacks dynamic segmentation capability, causing points from different frames to be mixed. -->
                         CUT3R lacks support for dynamic mask estimation, leading to the blending of points from different frames when ground truth masks are not used. Additionally, our approach demonstrates greater reliability in achieving accurate camera poses.
                     </p>
                     <div id="wrapper" style="
@@ -270,21 +248,9 @@ function showSection(id) {
                         <div><i class="ti ti-zoom"></i> <strong>Scroll</strong> to zoom</div>
                         <div><strong>Click <i class="fas fa-pause"></i></strong> to pause</div>
                     </div>
-                    <button onclick="window.location.href='./interactive.html';" target="_blank"
-                        style="font-size: 20px; font-family: 'Arial', sans-serif; background-color: #92A8D1; color: white; margin: 20px auto; display: block; padding: 15px 15px; border: none; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-align: center; transition: all 0.3s ease; cursor: pointer;">
-                        <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"
-                                style="fill: #ffffff">
-                                <path
-                                    d="M256 0c-25.3 0-47.2 14.7-57.6 36c-7-2.6-14.5-4-22.4-4c-35.3 0-64 28.7-64 64V261.5l-2.7-2.7c-25-25-65.5-25-90.5 0s-25 65.5 0 90.5L106.5 437c48 48 113.1 75 181 75H296h8c1.5 0 3-.1 4.5-.4c91.7-6.2 165-79.4 171.1-171.1c.3-1.5 .4-3 .4-4.5V160c0-35.3-28.7-64-64-64c-5.5 0-10.9 .7-16 2V96c0-35.3-28.7-64-64-64c-7.9 0-15.4 1.4-22.4 4C303.2 14.7 281.3 0 256 0zM240 96.1c0 0 0-.1 0-.1V64c0-8.8 7.2-16 16-16s16 7.2 16 16V95.9c0 0 0 .1 0 .1V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96c0 0 0 0 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16v55.9c0 0 0 .1 0 .1v80c0 13.3 10.7 24 24 24s24-10.7 24-24V160.1c0 0 0-.1 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16V332.9c-.1 .6-.1 1.3-.2 1.9c-3.4 69.7-59.3 125.6-129 129c-.6 0-1.3 .1-1.9 .2H296h-8.5c-55.2 0-108.1-21.9-147.1-60.9L52.7 315.3c-6.2-6.2-6.2-16.4 0-22.6s16.4-6.2 22.6 0L119 336.4c6.9 6.9 17.2 8.9 26.2 5.2s14.8-12.5 14.8-22.2V96c0-8.8 7.2-16 16-16c8.8 0 16 7.1 16 15.9V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96.1z">
-                                </path>
-                            </svg>
-                        </span>
-                            Explore more interactive results for dynamic scene reconstruction!
-                    </button>
                 </div>
             </div>
-        </div>
+        </div><br>
         `
     };
 
