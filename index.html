@@ -416,22 +416,13 @@
                         <span style="margin-right: 10px; font-weight: bold; font-size: 16px;">Comparison Method:</span>
                         <nav style="flex: 1;">
                             <ul>
-                                <li><a id="nav1" href="javascript:void(0);" onclick="showSection('vs_mon');setActive('nav1');">MonST3R</a></li>
-                                <li><a id="nav2" href="javascript:void(0);" onclick="showSection('vs_das');setActive('nav2');">DAS3R</a></li>
-                                <li><a id="nav3" href="javascript:void(0);" onclick="showSection('vs_cut');setActive('nav3');">CUT3R</a></li>
+                                <li><a id="nav1" href="javascript:void(0);" onclick="showSection('vs_mon');setActive('nav1');loadComparisonIframes('mon');">MonST3R</a></li>
+                                <li><a id="nav2" href="javascript:void(0);" onclick="showSection('vs_das');setActive('nav2');loadComparisonIframes('das');">DAS3R</a></li>
+                                <li><a id="nav3" href="javascript:void(0);" onclick="showSection('vs_cut');setActive('nav3');loadComparisonIframes('cut');">CUT3R</a></li>
                             </ul>
                         </nav>
                     </div>
                 </div>
-                <script>
-                    function setActive(activeId) {
-                        document.querySelectorAll('nav ul li a').forEach(function(link) {
-                            link.classList.remove('active');
-                        });
-                    
-                        document.getElementById(activeId).classList.add('active');
-                    }
-                    </script>
             </div>
         </div>
         <script defer src="./static/js/nav.js"></script>
@@ -943,6 +934,32 @@
     </footer>
     
     
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var comparisonSection = document.querySelector('.section h2.title.is-3:contains("Comparison")').closest('.section');
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    var activeNav = document.querySelector('nav ul li a.active');
+                    if (activeNav) {
+                        activeNav.click();
+                    } else {
+                        document.getElementById('nav1').click();
+                    }
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {threshold: 0.1}); 
+        
+        if (comparisonSection) {
+            observer.observe(comparisonSection);
+        }
+    });
+
+    Element.prototype.contains = function(text) {
+        return this.textContent.includes(text);
+    };
+    </script>
 </body>
 
 </html>
