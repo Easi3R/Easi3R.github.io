@@ -136,17 +136,14 @@ body {
     padding: 0;
     font-size: 0;
     /* flex: 1; */
-    /*height: 220px;*/
-    /*width: 320px;*/
   /*  display: flex;
     background-color: rgba(0, 0, 0, 1);
     flex-basis: fit-content;
-    height: 320px;*/
     background-color: rgba(0, 0, 0, 0.2);
     /* flex-basis: fit-content; */
     /* height: 500px; */
     max-width: 850px;
-    /* box-shadow: 0 0 4px #888; */
+    background-color: rgba(0, 0, 0, 0.2);
   }
   
   .results-carousel video {
@@ -154,7 +151,6 @@ body {
     height: auto;
     width: 100%;
     object-fit: contain;
-    /*width: 320px;*/
   }
 
 
