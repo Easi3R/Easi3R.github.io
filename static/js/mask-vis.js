@@ -1,4 +1,17 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
+    const thumbnailData = [
+        'koala', 'mbike-trick', 'schoolgirls', 'dog-gooses', 
+        'goat', 'rhino', 'crossing', 'elephant',
+        'drift-chicane', 'bear', 'judo', 'bike-packing'
+    ];
+
+    const thumbnailsHtml = thumbnailData.map(name => `
+        <img src="static/thumbs/${name}.jpg" 
+             data-video="static/videos/mask/${name}.mp4"
+             class="thumbnail mask-thumbnail" 
+             alt="${name}" 
+             style="cursor: pointer; width: 100px;">
+    `).join('');
 
     const content = `
         <div class="container is-max-desktop">
@@ -13,45 +26,30 @@ document.addEventListener('DOMContentLoaded', function () {
                         where \\( \\alpha \\) is an automatic image thresholding using <a href="https://en.wikipedia.org/wiki/Otsu%27s_method">Otsu's method</a>.
                     </p>
                     <br>
-                    <div style="position: relative; width: 95%; margin: 0 auto;">
-                        <div style="display: flex; justify-content: space-between; margin-top: auto; align-items: center;">
-                            <span style="flex: 1; text-align: center; font-size: 16px; font-weight: bold;">Input Video</span>
-                            <span style="flex: 1; text-align: center; font-size: 16px; font-weight: bold;">MonST3R</span>
-                            <span style="flex: 1; text-align: center; font-size: 16px; font-weight: bold;">DAS3R</span>
-                            <span style="flex: 1; text-align: center; font-size: 16px; font-weight: bold;">Ours</span>
-                            <span style="flex: 1; text-align: center; font-size: 16px; font-weight: bold;">GT</span>
+                    <div class="video-container">
+                        <div class="video-labels">
+                            <span class="video-label">Input Video</span>
+                            <span class="video-label">MonST3R</span>
+                            <span class="video-label">DAS3R</span>
+                            <span class="video-label">Ours</span>
+                            <span class="video-label">GT</span>
                         </div>
-                        <div id="mask-video-container" style="width: 100%; position: relative; aspect-ratio: 4678/532; background-color: #ffffff;">
-                            <video id="mask-video" width="100%" height="100%" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain;" autoplay muted loop>
-                                <source id="mask-video-source" src="" type="video/mp4">
+                        <div id="mask-video-container" style="width: 100%; position: relative; aspect-ratio: 4678/532;">
+                            <video id="mask-video" autoplay muted loop style="width: 100%; height: 100%;">
+                                <source id="mask-video-source" type="video/mp4">
                             </video>
                         </div>
                     </div>
-                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; margin-bottom: 10px; max-width: 100%;">
-                        <img src="static/thumbs/koala.jpg" data-video="static/videos/mask/koala.mp4" class="thumbnail mask-thumbnail" alt="koala" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/mbike-trick.jpg" data-video="static/videos/mask/mbike-trick.mp4" class="thumbnail mask-thumbnail" alt="mbike-trick" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/schoolgirls.jpg" data-video="static/videos/mask/schoolgirls.mp4" class="thumbnail mask-thumbnail" alt="schoolgirls" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/dog-gooses.jpg" data-video="static/videos/mask/dog-gooses.mp4" class="thumbnail mask-thumbnail" alt="dog-gooses" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/goat.jpg" data-video="static/videos/mask/goat.mp4" class="thumbnail mask-thumbnail" alt="goat" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/rhino.jpg" data-video="static/videos/mask/rhino.mp4" class="thumbnail mask-thumbnail" alt="rhino" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/crossing.jpg" data-video="static/videos/mask/crossing.mp4" class="thumbnail mask-thumbnail" alt="crossing" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/elephant.jpg" data-video="static/videos/mask/elephant.mp4" class="thumbnail mask-thumbnail" alt="elephant" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/drift-chicane.jpg" data-video="static/videos/mask/drift-chicane.mp4" class="thumbnail mask-thumbnail" alt="drift-chicane" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/bear.jpg" data-video="static/videos/mask/bear.mp4" class="thumbnail mask-thumbnail" alt="bear" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/judo.jpg" data-video="static/videos/mask/judo.mp4" class="thumbnail mask-thumbnail" alt="judo" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/bike-packing.jpg" data-video="static/videos/mask/bike-packing.mp4" class="thumbnail mask-thumbnail" alt="bike-packing" style="cursor: pointer; width: 100px;">
+                    <div class="thumbnail-container">
+                        ${thumbnailsHtml}
                     </div>
                 </div>
             </div>
         </div>
     `;
 
-    const section = document.getElementById('mask-vis');
-    section.innerHTML = content;
-    section.style.display = 'block';
-
     const style = document.createElement('style');
-    style.innerHTML = `
+    style.textContent = `
         .thumbnail {
             border-radius: 6px;
             border: 2px solid #fff;
@@ -60,49 +58,31 @@ document.addEventListener('DOMContentLoaded', function () {
             height: 70px;
             object-fit: cover;
             transition: transform 0.3s ease;
-            vertical-align: bottom;
         }
-
-        .thumbnail:hover {
-            transform: scale(1.1);
-        }
+        .thumbnail:hover { transform: scale(1.1); }
     `;
     document.head.appendChild(style);
 
-    const thumbnails = document.querySelectorAll('.mask-thumbnail');
+    const section = document.getElementById('mask-vis');
+    section.innerHTML = content;
+    section.style.display = 'block';
+
     const videoElement = document.getElementById('mask-video');
     const videoSource = document.getElementById('mask-video-source');
-
-    thumbnails.forEach(thumbnail => {
-        thumbnail.style.border = '2px solid #fff';
-    });
+    const thumbnails = document.querySelectorAll('.mask-thumbnail');
 
     thumbnails[0].style.border = '3px solid #92A8D1';
-
-    const defaultVideoSrc = thumbnails[0].getAttribute('data-video');
-    videoSource.src = defaultVideoSrc;
+    videoSource.src = thumbnails[0].dataset.video;
     videoElement.load();
-    videoElement.play();
 
     thumbnails.forEach(thumbnail => {
-        thumbnail.addEventListener('click', function() {
-            thumbnails.forEach(t => {
-                t.style.border = '2px solid #fff';
-            });
+        thumbnail.addEventListener('click', () => {
+            thumbnails.forEach(t => t.style.border = '2px solid #fff');
+            thumbnail.style.border = '3px solid #92A8D1';
             
-            this.style.border = '3px solid #92A8D1';
-            
-            const videoSrc = this.getAttribute('data-video');
-            
-            videoElement.pause();
-            
-            videoSource.src = videoSrc;
+            videoSource.src = thumbnail.dataset.video;
             videoElement.load();
             videoElement.play();
         });
     });
-
-    if (section) {
-        section.style.display = 'block';
-    }
 });

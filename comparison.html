@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="A simple training-free approach adapting DUSt3R for dynamic scenes.">
+    <meta name="keywords" content="Easi3R">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Comparison</title>
+
+    <link rel="icon" type="image/x-icon" href="static/images/android-chrome-512x512.png">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-PYVRSFMDRL');
+    </script>
+
+    <meta property="og:image" content="https://Easi3R.github.io/static/images/icon.png">
+    <!-- <meta property="og:image" content="static/images/icon.png"> -->
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Easi3R: Estimating Disentangled Motion from DUSt3R Without Training">
+    <meta name="twitter:description"
+        content="A simple training-free approach adapting DUSt3R for dynamic scenes.">
+    <meta name="twitter:image" content="https://Easi3R.github.io/static/images/icon.png">
+    <!-- <meta name="twitter:image" content="static/images/icon.png"> -->
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:400,600|Noto+Sans:400,600|Castoro:400,600"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/modern-normalize@3.0.1/modern-normalize.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.19.0/tabler-icons-outline.min.css"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="./static/css/bulma.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.4/dist/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.3/dist/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="./static/css/index.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <script defer src="./static/js/bulma-carousel.min.js"></script>
+    <!-- <script defer src="./static/js/index.js"></script> -->
+    <!-- <script src="./static/js/index.js"></script> -->
+    <script defer src="./static/js/lazy.js"></script>
+    <script defer src="./static/js/iframe-compare.js"></script>
+    <style>
+        .center-image {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .item {
+            margin: 10px;
+        }
+
+        .blend-img-background {
+            mix-blend-mode: multiply;
+        }
+
+        iframe {
+            border-radius: 0.5em;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1;
+            border: none;
+            box-shadow: 0 0 1em 0em rgba(0, 0, 0, 0.15);
+            max-width: 100%;
+            margin-top: 20px;
+            margin-bottom: 5px;
+            }
+
+        @media (max-width: 768px) {
+            iframe {
+                width: 100%;
+                height: auto;
+            }
+            }
+
+        .iframe-container {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            flex: 1;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px 0;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+ 
+        nav {
+            text-align: center;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            width: 100%;
+            gap: 10px;
+        }
+
+        nav ul li {
+            flex: 1;
+            display: flex;
+            margin: 0;
+        }
+
+        nav ul li a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f5f5;
+            color: #363636;
+            padding: 10px 20px;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            min-height: 50px;
+            flex-grow: 1;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+
+        nav ul li a:hover {
+            background-color: #e4e4e4;
+            transform: scale(1.05);
+        }
+
+        nav ul li a:active {
+            background-color: #d3d3d3;
+            transform: scale(0.95);
+        }
+
+        nav ul li a.active {
+            background-color: #cccccc; /* Change color to indicate active tab */
+            color: #000000; /* Optional: Change text color if needed */
+        }
+
+
+        .dynamic-section {
+            display: none;
+            padding: 1rem 0;
+        }
+        
+        .panel-style {
+            background-color: #fafafa;
+            padding: 20px;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <section class="hero" style="margin-bottom: 0; padding-bottom: 0;">
+        <div class="hero-body" style="padding-bottom: 0rem;">
+            <div class="container is-max-desktop">
+                <div class="columns is-centered" style="margin-bottom: 0">
+                    <h2 class="title is-3 publication-title" style="margin-bottom:0rem; max-width: 100%; margin-left: auto; margin-right: auto;">
+                        <img src="./static/images/android-chrome-512x512.png" alt="ICON"
+                            style="max-width: 64px; vertical-align: middle;">
+                        <strong>Easi3R: Estimating Disentangled Motion from DUSt3R Without Training</strong>
+                    </h2>
+                </div>
+                <div class="columns is-centered">
+                    <div class="column is-four-fifths has-text-centered">
+                        <div class="is-size-6 publication-authors">
+                            <span class="author-block">
+                                <a href="https://rover-xingyu.github.io/">Xingyu 
+                                    Chen</a><sup>1</sup></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="author-block">
+                                <a href="https://fanegg.github.io/">Yue 
+                                    Chen</a><sup>1</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                            <span class="author-block">
+                                <a href="https://xiuyuliang.cn/">Yuliang 
+                                    Xiu</a><sup>1,2</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                            <span class="author-block">
+                                <a href="https://www.cvlibs.net/">Andreas 
+                                    Geiger</a><sup>3</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                            <span class="author-block">
+                                <a href="https://apchenstu.github.io/">Anpei 
+                                    Chen</a><sup>1,3</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                        </div>
+
+                        <div class="is-size-6 publication-authors">
+                            <span class="author-block"><sup>1</sup>Westlake University</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="author-block"><sup>2</sup>Max Planck Institute for Intelligent Systems</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="author-block"><sup>3</sup>University of Tübingen, Tübingen AI Center</span>
+                        </div>
+
+
+                        <div class="column has-text-centered">
+                            <div class="publication-links">
+                                <span class="link-block">
+                                    <a href="http://arxiv.org/abs/2503.xxxxx" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="ai ai-arxiv"></i>
+                                        </span>
+                                        <span>arXiv</span>
+                                    </a>
+                                </span>
+                                <span class="link-block">
+                                    <a href="index.html" target="_blank"
+                                        class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="fas fa-home"></i>
+                                        </span>
+                                        <span>Project Page</span>
+                                    </a>
+                                </span>
+                                <span class="link-block">
+                                    <a href="interactive.html" target="_blank"
+                                        class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"
+                                                style="fill: #ffdf0f">
+                                                <path
+                                                    d="M256 0c-25.3 0-47.2 14.7-57.6 36c-7-2.6-14.5-4-22.4-4c-35.3 0-64 28.7-64 64V261.5l-2.7-2.7c-25-25-65.5-25-90.5 0s-25 65.5 0 90.5L106.5 437c48 48 113.1 75 181 75H296h8c1.5 0 3-.1 4.5-.4c91.7-6.2 165-79.4 171.1-171.1c.3-1.5 .4-3 .4-4.5V160c0-35.3-28.7-64-64-64c-5.5 0-10.9 .7-16 2V96c0-35.3-28.7-64-64-64c-7.9 0-15.4 1.4-22.4 4C303.2 14.7 281.3 0 256 0zM240 96.1c0 0 0-.1 0-.1V64c0-8.8 7.2-16 16-16s16 7.2 16 16V95.9c0 0 0 .1 0 .1V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96c0 0 0 0 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16v55.9c0 0 0 .1 0 .1v80c0 13.3 10.7 24 24 24s24-10.7 24-24V160.1c0 0 0-.1 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16V332.9c-.1 .6-.1 1.3-.2 1.9c-3.4 69.7-59.3 125.6-129 129c-.6 0-1.3 .1-1.9 .2H296h-8.5c-55.2 0-108.1-21.9-147.1-60.9L52.7 315.3c-6.2-6.2-6.2-16.4 0-22.6s16.4-6.2 22.6 0L119 336.4c6.9 6.9 17.2 8.9 26.2 5.2s14.8-12.5 14.8-22.2V96c0-8.8 7.2-16 16-16c8.8 0 16 7.1 16 15.9V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96.1z">
+                                                </path>
+                                            </svg>
+                                        </span>
+                                        <span>Interactive Results</span>
+                                    </a>
+                                </span>
+                                <span class="link-block">
+                                    <a href="https://github.com/Inception3D/Easi3R" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="fab fa-github"></i>
+                                        </span>
+                                        <span>Code</span>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <h2 class="title is-3">Comparison</h2>
+                    <p style="max-width: 100%; margin: 0 auto; text-align: center;">
+                        Here, we visualize cross-frame aligned static scenes with dynamic point clouds at a selected timestamp. <br>
+                        Instead of using <strong>GT dynamic masks</strong>, we use the <strong>estimated</strong> dynamic masks to filter out points at other timestamps.<br>
+                        Click tabs below to explore the results for each baseline. 
+                    </p>
+                    <div style="display: flex; align-items: center; justify-content: center;">
+                        <span style="margin-right: 10px; font-weight: bold; font-size: 16px;">Comparison Method:</span>
+                        <nav style="flex: 1;">
+                            <ul>
+                                <li><a id="nav1" href="javascript:void(0);" onclick="showSection('vs_mon');setActive('nav1');loadComparisonIframes('mon');">MonST3R</a></li>
+                                <li><a id="nav2" href="javascript:void(0);" onclick="showSection('vs_das');setActive('nav2');loadComparisonIframes('das');">DAS3R</a></li>
+                                <li><a id="nav3" href="javascript:void(0);" onclick="showSection('vs_cut');setActive('nav3');loadComparisonIframes('cut');">CUT3R</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script defer src="./static/js/nav.js"></script>
+    
+
+    <section id="vs_mon" class="section dynamic-section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full  panel-style">
+                    <p id="compare-description" style="max-width: 90%; margin: 0 auto; text-align: center;">
+                        <!-- MonST3R suffers from structure misalignment and ghosting artifacts due to under-segmentation of the dog and goose. -->
+                        Our method achieves superior structure alignment and fewer artifacts, owing to the robust dynamic segmentation estimation.
+                    </p>
+                    <div id="wrapper" style="
+                            display: flex;
+                            flex-wrap: nowrap;
+                            justify-content: center;
+                            align-items: center;
+                            gap: 1em;
+                            width: 100%;
+                        ">
+                        <!-- Insert two iframes -->
+                        <div class="iframe-container">
+                            <iframe id="left-iframe"
+                            data-src="https://Easi3R.github.io/build/?playbackPath=https://Easi3R.github.io/recordings/recording_dog-gooses-mon.viser&initDistanceScale=0.85&initHeightOffset=0.08"></iframe>
+                            <p style="text-align: center; font-size: 20px; font-weight: bold; flex: 1; margin-bottom: 10px;">MonST3R</p>
+                        </div>
+                        <div class="iframe-container">
+                            <iframe id="right-iframe"
+                            data-src="https://Easi3R.github.io/build/?playbackPath=https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08"></iframe>
+                            <p style="text-align: center; font-size: 20px; font-weight: bold; flex: 1; margin-bottom: 10px;">Ours</p>
+                        </div>
+                    </div>
+                    
+                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 5px; margin-bottom: 20px; max-width: 100%;">
+                        <img src="static/thumbs/dog-gooses.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-mon.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="Our method achieves superior structure alignment and fewer artifacts, owing to the robust dynamic segmentation estimation."
+                         class="thumbnail viser-thumbnail active" alt="dog-gooses" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/schoolgirls.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_schoolgirls-mon.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_schoolgirls-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="MonST3R suffers from structure misalignment and ghosting artifacts due to under-segmentation of schoolgirls."
+                         class="thumbnail viser-thumbnail" alt="schoolgirls" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/sheep.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_sheep-mon.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_sheep-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="MonST3R suffers from structure misalignment and ghosting artifacts due to under-segmentation of sheep."
+                         class="thumbnail viser-thumbnail" alt="sheep" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/drift-chicane.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-mon.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="MonST3R suffers from ghosting artifacts due to under-segmentation of the drift chicane."
+                         class="thumbnail viser-thumbnail" alt="drift-chicane" style="cursor: pointer; width: 100px;">
+                    </div>
+
+                    <p style="text-align: center; font-size: 1em; padding: 0em; color: #555;">
+                        Results are downsampled <strong>10 times</strong> for efficient online rendering
+                    </p>
+                    <div class="hide-on-touchscreens" style="
+                        display: flex;
+                        justify-content: center;
+                        gap: 1.5em;
+                        padding-top: 0.5em;
+                    ">
+                        <div>
+                            <i class="ti ti-view-360-arrow"></i> <strong>Left-click</strong> and
+                            drag to rotate
+                        </div>
+                        <div>
+                            <i class="ti ti-arrows-move"></i> <strong>Right-click</strong> and
+                            drag or
+                            <strong>WASD</strong>
+                            to move
+                        </div>
+                        <div><i class="ti ti-zoom"></i> <strong>Scroll</strong> to zoom</div>
+                        <div><strong>Click <i class="fas fa-pause"></i></strong> to pause</div>
+                    </div>
+                    <script>
+                        var para = document.getElementById('click-interactive');
+
+                        para.addEventListener('mouseenter', function () {
+                            para.style.fontSize = '22px'; 
+                            para.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'; 
+                        });
+
+                        para.addEventListener('mouseleave', function () {
+                            para.style.fontSize = '18px'; 
+                            para.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)'; 
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="vs_das" class="section dynamic-section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full  panel-style">
+                    <p id="compare-description-das" style="max-width: 90%; margin: 0 auto; text-align: center;">
+                        Our method provides clean reconstructions, while DAS3R suffers from structure misalignment and ghosting artifacts due to inaccuracies in dynamic segmentation estimation. For example, it under-segments the dog and goose.
+                    </p>
+                    <div id="wrapper" style="
+                            display: flex;
+                            flex-wrap: nowrap;
+                            justify-content: center;
+                            align-items: center;
+                            gap: 1em;
+                            width: 100%;
+                        ">
+                        <!-- Insert two iframes -->
+                        <div class="iframe-container">
+                            <iframe id="left-iframe-das"
+                            data-src="https://Easi3R.github.io/build/?playbackPath=https://Easi3R.github.io/recordings/recording_dog-gooses-das.viser&initDistanceScale=0.85&initHeightOffset=0.08"></iframe>
+                            <p style="text-align: center; font-size: 20px; font-weight: bold; flex: 1; margin-bottom: 10px;">DAS3R</p>
+                        </div>
+                        <div class="iframe-container">
+                            <iframe id="right-iframe-das"
+                            data-src="https://Easi3R.github.io/build/?playbackPath=https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08"></iframe>
+                            <p style="text-align: center; font-size: 20px; font-weight: bold; flex: 1; margin-bottom: 10px;">Ours</p>
+                        </div>
+                    </div>
+                    
+                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 5px; margin-bottom: 20px; max-width: 100%;">
+                        <img src="static/thumbs/dog-gooses.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-das.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="Our method provides clean reconstructions, while DAS3R suffers from structure misalignment and ghosting artifacts due to inaccuracies in dynamic segmentation estimation. For example, it under-segments the dog and goose."
+                         class="thumbnail viser-thumbnail-das" alt="dog-gooses" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/schoolgirls.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_schoolgirls-das.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_schoolgirls-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="Our method provides clean reconstructions, while DAS3R suffers from structure misalignment with over-segmentation of walls."
+                         class="thumbnail viser-thumbnail-das" alt="schoolgirls" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/sheep.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_sheep-das.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_sheep-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="Our method provides clean reconstructions, while DAS3R suffers from ghosting artifacts due to inaccuracies in dynamic segmentation estimation. For example, it under-segments the sheep while over-segmenting the tree."
+                         class="thumbnail viser-thumbnail-das" alt="sheep" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/drift-chicane.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-das.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="Our method provides clean reconstructions, while DAS3R suffers from ghosting artifacts due to inaccuracies in dynamic segmentation estimation. For example, it under-segments the drift chicane while over-segmenting the building."
+                         class="thumbnail viser-thumbnail-das" alt="drift-chicane" style="cursor: pointer; width: 100px;">
+                    </div>
+
+                    <p style="text-align: center; font-size: 1em; padding: 0em; color: #555;">
+                        Results are downsampled <strong>10 times</strong> for efficient online rendering
+                    </p>
+                    <div class="hide-on-touchscreens" style="
+                        display: flex;
+                        justify-content: center;
+                        gap: 1.5em;
+                        padding-top: 0.5em;
+                    ">
+                        <div>
+                            <i class="ti ti-view-360-arrow"></i> <strong>Left-click</strong> and
+                            drag to rotate
+                        </div>
+                        <div>
+                            <i class="ti ti-arrows-move"></i> <strong>Right-click</strong> and
+                            drag or
+                            <strong>WASD</strong>
+                            to move
+                        </div>
+                        <div><i class="ti ti-zoom"></i> <strong>Scroll</strong> to zoom</div>
+                        <div><strong>Click <i class="fas fa-pause"></i></strong> to pause</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="vs_cut" class="section dynamic-section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full  panel-style">
+                    <p id="compare-description-cut" style="max-width: 90%; margin: 0 auto; text-align: center;">
+                        <!-- While CUT3R achieves better per-frame depth estimation, it is susceptible to dynamic objects,
+                        leading to misaligned static walls and unstable camera pose estimation.
+                        Additionally, ghosting artifacts arise as CUT3R lacks dynamic segmentation capability, causing points from different frames to be mixed. -->
+                        CUT3R lacks support for dynamic mask estimation, leading to the blending of points from different frames when ground truth masks are not used. Additionally, our approach demonstrates greater reliability in achieving accurate camera poses.
+                    </p>
+                    <div id="wrapper" style="
+                            display: flex;
+                            flex-wrap: nowrap;
+                            justify-content: center;
+                            align-items: center;
+                            gap: 1em;
+                            width: 100%;
+                        ">
+                        <!-- Insert two iframes -->
+                        <div class="iframe-container">
+                            <iframe id="left-iframe-cut"
+                            data-src="https://Easi3R.github.io/build/?playbackPath=https://Easi3R.github.io/recordings/recording_dog-gooses-cut.viser&initDistanceScale=0.85&initHeightOffset=0.08"></iframe>
+                            <p style="text-align: center; font-size: 20px; font-weight: bold; flex: 1; margin-bottom: 10px;">CUT3R</p>
+                        </div>
+                        <div class="iframe-container">
+                            <iframe id="right-iframe-cut"
+                            data-src="https://Easi3R.github.io/build/?playbackPath=https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08"></iframe>
+                            <p style="text-align: center; font-size: 20px; font-weight: bold; flex: 1; margin-bottom: 10px;">Ours</p>
+                        </div>
+                    </div>
+                    
+                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 5px; margin-bottom: 20px; max-width: 100%;">
+                        <img src="static/thumbs/dog-gooses.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-cut.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_dog-gooses-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="CUT3R lacks support for dynamic mask estimation, leading to the blending of points from different frames when ground truth masks are not used. Additionally, our approach demonstrates greater reliability in achieving accurate camera poses."
+                         class="thumbnail viser-thumbnail-cut" alt="dog-gooses" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/schoolgirls.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_schoolgirls-cut.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_schoolgirls-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="CUT3R lacks support for dynamic mask estimation, leading to the blending of points from different frames when ground truth masks are not used. Additionally, our approach demonstrates greater reliability in achieving accurate camera poses."
+                         class="thumbnail viser-thumbnail-cut" alt="schoolgirls" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/sheep.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_sheep-cut.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_sheep-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="CUT3R lacks support for dynamic mask estimation, leading to the blending of points from different frames when ground truth masks are not used. Additionally, our approach demonstrates greater reliability in achieving accurate camera poses."
+                         class="thumbnail viser-thumbnail-cut" alt="sheep" style="cursor: pointer; width: 100px;">
+                         <img src="static/thumbs/drift-chicane.jpg" 
+                         data-left-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-cut.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-right-viser="https://Easi3R.github.io/recordings/recording_drift-chicane-ours.viser&initDistanceScale=0.85&initHeightOffset=0.08" 
+                         data-description="CUT3R lacks support for dynamic mask estimation, leading to the blending of points from different frames when ground truth masks are not used. Additionally, our approach demonstrates greater reliability in achieving accurate camera poses."
+                         class="thumbnail viser-thumbnail-cut" alt="drift-chicane" style="cursor: pointer; width: 100px;">
+                    </div>
+
+                    <p style="text-align: center; font-size: 1em; padding: 0em; color: #555;">
+                        Results are downsampled <strong>10 times</strong> for efficient online rendering
+                    </p>
+                    <div class="hide-on-touchscreens" style="
+                        display: flex;
+                        justify-content: center;
+                        gap: 1.5em;
+                        padding-top: 0.5em;
+                    ">
+                        <div>
+                            <i class="ti ti-view-360-arrow"></i> <strong>Left-click</strong> and
+                            drag to rotate
+                        </div>
+                        <div>
+                            <i class="ti ti-arrows-move"></i> <strong>Right-click</strong> and
+                            drag or
+                            <strong>WASD</strong>
+                            to move
+                        </div>
+                        <div><i class="ti ti-zoom"></i> <strong>Scroll</strong> to zoom</div>
+                        <div><strong>Click <i class="fas fa-pause"></i></strong> to pause</div>
+                    </div>
+                </div>
+            </div>
+        </div><br>
+    </section>
+
+
+      <section class="section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <h2 class="title is-3">Related Work</h2>
+                    <div class="content has-text-justified">
+                        We compare Easi3R with state-of-the-art pose-free 4D reconstruction methods, including:
+                        <li><a href="https://monst3r-project.github.io/">MonST3R: A Simple Approach for Estimating Geometry in the Presence of Motion</a></li>
+                        <li><a href="https://kai422.github.io/DAS3R/">DAS3R: Dynamics-Aware Gaussian Splatting for Static Scene Reconstruction</a></li>
+                        <li><a href="https://cut3r.github.io/">CUT3R: Continuous 3D Perception Model with Persistent State</a></li>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var comparisonSection = document.querySelector('.section h2.title.is-3:contains("Comparison")').closest('.section');
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    var activeNav = document.querySelector('nav ul li a.active');
+                    if (activeNav) {
+                        activeNav.click();
+                    } else {
+                        document.getElementById('nav1').click();
+                    }
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {threshold: 0.85}); 
+        
+        if (comparisonSection) {
+            observer.observe(comparisonSection);
+        }
+    });
+
+    Element.prototype.contains = function(text) {
+        return this.textContent.includes(text);
+    };
+    </script>
+</body>
+
+</html>

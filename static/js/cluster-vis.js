@@ -1,7 +1,30 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_HTML';
     document.head.appendChild(script);
+
+    const thumbnailData = [
+        {src: 'dogs-scale', alt: 'dogs-scale'},
+        {src: 'tennis', alt: 'tennis'},
+        {src: 'drone', alt: 'drone'},
+        {src: 'stroller', alt: 'stroller'},
+        {src: 'snowboard', alt: 'snowboard'},
+        {src: 'bike-packing', alt: 'bike-packing'},
+        {src: 'lucia', alt: 'lucia'},
+        {src: 'koala', alt: 'koala'},
+        {src: 'breakdance-flare', alt: 'breakdance-flare'},
+        {src: 'judo', alt: 'judo'},
+        {src: 'hike', alt: 'hike'},
+        {src: 'bear', alt: 'bear'}
+    ];
+
+    const thumbnailsHtml = thumbnailData.map(({src, alt}) => `
+        <img src="static/thumbs/${src}.jpg" 
+             data-video="static/videos/cluster/${src}.mp4"
+             class="thumbnail cluster-thumbnail" 
+             alt="${alt}" 
+             style="cursor: pointer; width: 100px;">
+    `).join('');
 
     const content = `
         <div class="container is-max-desktop">
@@ -20,41 +43,22 @@ document.addEventListener('DOMContentLoaded', function () {
                             <span style="flex: 1; text-align: center; font-size: 16px; font-weight: bold;">Cluster Assignment \\( {C}^t \\)</span>
                             <span style="flex: 1; text-align: center; font-size: 16px; font-weight: bold;">Fused Dynamic Attention \\( \\mathbf{A}^{t=\\text{dyn}}_{\\text{fuse}} \\)</span>
                         </div>
-                        <div id="cluster-video-container" style="width: 100%; position: relative; aspect-ratio: 4678/660; background-color: #ffffff;">
-                            <video id="cluster-video" width="100%" height="100%" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain;" autoplay muted loop>
-                                <source id="cluster-video-source" src="" type="video/mp4">
+                        <div id="cluster-video-container" style="width: 100%; position: relative; aspect-ratio: 4678/660;">
+                            <video id="cluster-video" autoplay muted loop style="width: 100%; height: 100%;">
+                                <source id="cluster-video-source" type="video/mp4">
                             </video>
                         </div>
                     </div>
-                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; margin-bottom: 10px; max-width: 100%;">
-                        <img src="static/thumbs/dogs-scale.jpg" data-video="static/videos/cluster/dogs-scale.mp4" class="thumbnail cluster-thumbnail" alt="dogs-scale" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/tennis.jpg" data-video="static/videos/cluster/tennis.mp4" class="thumbnail cluster-thumbnail" alt="tennis" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/drone.jpg" data-video="static/videos/cluster/drone.mp4" class="thumbnail cluster-thumbnail" alt="drone" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/stroller.jpg" data-video="static/videos/cluster/stroller.mp4" class="thumbnail cluster-thumbnail" alt="stroller" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/snowboard.jpg" data-video="static/videos/cluster/snowboard.mp4" class="thumbnail cluster-thumbnail" alt="snowboard" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/bike-packing.jpg" data-video="static/videos/cluster/bike-packing.mp4" class="thumbnail cluster-thumbnail" alt="bike-packing" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/lucia.jpg" data-video="static/videos/cluster/lucia.mp4" class="thumbnail cluster-thumbnail" alt="lucia" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/koala.jpg" data-video="static/videos/cluster/koala.mp4" class="thumbnail cluster-thumbnail" alt="koala" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/breakdance-flare.jpg" data-video="static/videos/cluster/breakdance-flare.mp4" class="thumbnail cluster-thumbnail" alt="breakdance-flare" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/judo.jpg" data-video="static/videos/cluster/judo.mp4" class="thumbnail cluster-thumbnail" alt="judo" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/hike.jpg" data-video="static/videos/cluster/hike.mp4" class="thumbnail cluster-thumbnail" alt="hike" style="cursor: pointer; width: 100px;">
-                        <img src="static/thumbs/bear.jpg" data-video="static/videos/cluster/bear.mp4" class="thumbnail cluster-thumbnail" alt="bear" style="cursor: pointer; width: 100px;">
+                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 20px auto 10px;">
+                        ${thumbnailsHtml}
                     </div>
                 </div>
             </div>
-        </div><br>
+        </div>
     `;
 
-    const section = document.getElementById('cluster-vis');
-    section.innerHTML = content;
-    section.style.display = 'block';
-
-    if (window.MathJax) {
-        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-    }
-
     const style = document.createElement('style');
-    style.innerHTML = `
+    style.textContent = `
         .thumbnail {
             border-radius: 6px;
             border: 2px solid #fff;
@@ -63,49 +67,35 @@ document.addEventListener('DOMContentLoaded', function () {
             height: 70px;
             object-fit: cover;
             transition: transform 0.3s ease;
-            vertical-align: bottom;
         }
-
-        .thumbnail:hover {
-            transform: scale(1.1);
-        }
+        .thumbnail:hover { transform: scale(1.1); }
     `;
     document.head.appendChild(style);
 
-    const thumbnails = document.querySelectorAll('.cluster-thumbnail');
+    const section = document.getElementById('cluster-vis');
+    section.innerHTML = content;
+    section.style.display = 'block';
+
     const videoElement = document.getElementById('cluster-video');
     const videoSource = document.getElementById('cluster-video-source');
-
-    thumbnails.forEach(thumbnail => {
-        thumbnail.style.border = '2px solid #fff';
-    });
+    const thumbnails = document.querySelectorAll('.cluster-thumbnail');
 
     thumbnails[0].style.border = '3px solid #92A8D1';
-
-    const defaultVideoSrc = thumbnails[0].getAttribute('data-video');
-    videoSource.src = defaultVideoSrc;
+    videoSource.src = thumbnails[0].dataset.video;
     videoElement.load();
-    videoElement.play();
 
     thumbnails.forEach(thumbnail => {
-        thumbnail.addEventListener('click', function() {
-            thumbnails.forEach(t => {
-                t.style.border = '2px solid #fff';
-            });
+        thumbnail.addEventListener('click', () => {
+            thumbnails.forEach(t => t.style.border = '2px solid #fff');
+            thumbnail.style.border = '3px solid #92A8D1';
             
-            this.style.border = '3px solid #92A8D1';
-            
-            const videoSrc = this.getAttribute('data-video');
-            
-            videoElement.pause();
-            
-            videoSource.src = videoSrc;
+            videoSource.src = thumbnail.dataset.video;
             videoElement.load();
             videoElement.play();
         });
     });
 
-    if (section) {
-        section.style.display = 'block';
+    if (window.MathJax) {
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
     }
 });

@@ -9,7 +9,22 @@ document.addEventListener('DOMContentLoaded', () => {
       autoplaySpeed: 5000,
     };
   
-    // Initialize all div with carousel class
-    var carousels = bulmaCarousel.attach('.carousel', options);
-  });
+    const carousel = document.querySelector('#results-carousel');
+    if (carousel) {
+      carousel.style.visibility = 'hidden';
+    }
+    
+    const videos = carousel.querySelectorAll('video');
+    let loadedVideos = 0;
+    
+    videos.forEach(video => {
+      video.addEventListener('loadeddata', () => {
+        loadedVideos++;
+        if (loadedVideos === videos.length) {
+          var carousels = bulmaCarousel.attach('.carousel', options);
+          carousel.style.visibility = 'visible';
+        }
+      });
+    });
+});
   
