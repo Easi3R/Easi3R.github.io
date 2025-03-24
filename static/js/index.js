@@ -14,17 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
       carousel.style.visibility = 'hidden';
     }
     
-    const videos = carousel.querySelectorAll('video');
-    let loadedVideos = 0;
+    var carousels = bulmaCarousel.attach('.carousel', options);
     
-    videos.forEach(video => {
-      video.addEventListener('loadeddata', () => {
-        loadedVideos++;
-        if (loadedVideos === videos.length) {
-          var carousels = bulmaCarousel.attach('.carousel', options);
-          carousel.style.visibility = 'visible';
-        }
-      });
-    });
+    if (carousel) {
+      carousel.style.visibility = 'visible';
+    }
 });
   
