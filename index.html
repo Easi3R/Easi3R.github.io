@@ -49,7 +49,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script defer src="./static/js/fontawesome.all.min.js"></script>
     <script defer src="./static/js/bulma-carousel.min.js"></script>
-    <script defer src="./static/js/index.js"></script>
+    <!-- <script defer src="./static/js/index.js"></script> -->
+    <script src="./static/js/index.js"></script>
     <script defer src="./static/js/lazy.js"></script>
     <script defer src="./static/js/iframe-compare.js"></script>
     <style>
@@ -58,6 +59,10 @@
             margin: 0 auto;
         }
 
+        /* .blend-img-item {
+             background: #f5f5f5;
+         } */
+
         .item {
             margin: 10px;
         }
@@ -65,6 +70,43 @@
         .blend-img-background {
             mix-blend-mode: multiply;
         }
+
+        /* #interactive {
+             position: relative;
+             display: inline-block;
+             width: 768px;
+             aspect-ratio: 16/9;
+             max-width: 100%;
+             border: 2px solid #fff;
+             border-radius: 6px;
+             overflow: hidden;
+             box-shadow: 0 0 4px #000;
+ 
+         }
+ 
+         #interactive canvas,
+         #interactive #glfailed,
+         #interactive #loading {
+             display: block;
+             position: absolute;
+             width: 100%;
+             height: 100%;
+             touch-action: none;
+         }
+ 
+         #interactive #glfailed {
+             color: #f88;
+             background: black;
+             display: none;
+         }
+ 
+         #interactive #loading {
+             color: #000;
+             font-size: 32px;
+             font-weight: bold;
+             background: rgba(255, 255, 255, 0.8);
+             display: none;
+         } */
 
         iframe {
             border-radius: 0.5em;
@@ -100,6 +142,30 @@
             cursor: pointer;
         }
 
+        /* .load img {
+             width: 100px;
+             height: 70px;
+             object-fit: cover;
+             margin: 4px;
+             border: 2px solid #fff;
+             box-shadow: 0 0 4px #888;
+             border-radius: 6px;
+             vertical-align: bottom;
+         }
+ 
+         .load img:active {
+             box-shadow: 0 0 4px #000;
+             opacity: .8;
+         }
+ 
+         .megabuttons {
+             position: absolute;
+             left: 5px;
+             bottom: 5px;
+             text-transform: uppercase;
+             text-align: left;
+         } */
+ 
         nav {
             text-align: center;
         }
@@ -161,7 +227,37 @@
             display: none;
             padding: 1rem 0;
         }
-
+        
+        /* .grid-container-2x6 {
+             display: grid;
+             grid-template-columns: repeat(6, 1fr);
+             grid-template-rows: repeat(2, auto);
+             gap: 10px;
+             padding: 20px;
+             max-width: 80%;
+             margin: auto;
+         }
+ 
+         .grid-container-2x6 img {
+             width: 100%;
+             height: auto;
+         }
+ 
+         .grid-container-1x6 {
+             display: grid;
+             grid-template-columns: repeat(6, 1fr);
+             grid-template-rows: repeat(1, auto);
+             gap: 10px;
+             padding: 20px;
+             max-width: 80%;
+             margin: auto;
+         }
+ 
+         .grid-container-1x6 img {
+             width: 100%;
+             height: auto;
+         } */
+ 
         .panel-style {
             background-color: #fafafa;
             padding: 20px;
@@ -230,6 +326,29 @@
                                     </a>
                                 </span>
                                 <span class="link-block">
+                                    <a href="interactive.html" target="_blank"
+                                        class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"
+                                                style="fill: #ffdf0f">
+                                                <path
+                                                    d="M256 0c-25.3 0-47.2 14.7-57.6 36c-7-2.6-14.5-4-22.4-4c-35.3 0-64 28.7-64 64V261.5l-2.7-2.7c-25-25-65.5-25-90.5 0s-25 65.5 0 90.5L106.5 437c48 48 113.1 75 181 75H296h8c1.5 0 3-.1 4.5-.4c91.7-6.2 165-79.4 171.1-171.1c.3-1.5 .4-3 .4-4.5V160c0-35.3-28.7-64-64-64c-5.5 0-10.9 .7-16 2V96c0-35.3-28.7-64-64-64c-7.9 0-15.4 1.4-22.4 4C303.2 14.7 281.3 0 256 0zM240 96.1c0 0 0-.1 0-.1V64c0-8.8 7.2-16 16-16s16 7.2 16 16V95.9c0 0 0 .1 0 .1V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96c0 0 0 0 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16v55.9c0 0 0 .1 0 .1v80c0 13.3 10.7 24 24 24s24-10.7 24-24V160.1c0 0 0-.1 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16V332.9c-.1 .6-.1 1.3-.2 1.9c-3.4 69.7-59.3 125.6-129 129c-.6 0-1.3 .1-1.9 .2H296h-8.5c-55.2 0-108.1-21.9-147.1-60.9L52.7 315.3c-6.2-6.2-6.2-16.4 0-22.6s16.4-6.2 22.6 0L119 336.4c6.9 6.9 17.2 8.9 26.2 5.2s14.8-12.5 14.8-22.2V96c0-8.8 7.2-16 16-16c8.8 0 16 7.1 16 15.9V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96.1z">
+                                                </path>
+                                            </svg>
+                                        </span>
+                                        <span>Interactive Results</span>
+                                    </a>
+                                </span>
+                                <span class="link-block">
+                                    <a href="gallery.html" target="_blank"
+                                        class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="fas fa-images"></i>
+                                        </span>
+                                        <span>Gallery</span>
+                                    </a>
+                                </span>
+                                <span class="link-block">
                                     <a href="https://github.com/Inception3D/Easi3R" class="external-link button is-normal is-rounded is-dark">
                                         <span class="icon">
                                             <i class="fab fa-github"></i>
@@ -250,25 +369,120 @@
         <div class="container fluid">
             <div class="hero-body is-max-widescreen">
                 <div class="columns is-centered">
-                    <div class="column is-centered is-full">
+                    <div class="column is-centered is-three-quarters">
                         <div class="notification is-centered is-info is-rounded"
-                            style="text-align: center; padding-bottom: 5px; padding-top: 5px; background-color: #ffffff;">
-                            <h6 class="title is-2 publication-title" style="margin-bottom:0rem; text-align: center; color:#8e6757; font-size: 22px; margin-left: auto; margin-right: auto;">
-                                <strong>TL;DR:</strong> A simple training-free approach adapting DUSt3R for dynamic scenes.
+                            style="text-align: center; padding-bottom: 5px; padding-top: 5px; background-color: #8e6757c1;">
+                            <h6 class="title is-2 publication-title" style="margin-bottom:0rem; text-align: center; color:#ffffff; font-size: 22px; margin-left: auto; margin-right: auto;">
+                                TL;DR: A simple training-free approach adapting DUSt3R for dynamic scenes.
                             </h6>
                         </div>
                     </div>
                 </div>
-                <center>
+                <!-- <center>
                     <video id="teaser" preload="auto" autoplay muted loop playsinline width="95%"
                         style="pointer-events: none;">
                         <source src="./static/videos/teaser.mp4" type="video/mp4">
                     </video>
-                </center>
+                </center> -->
 
             </div>
         </div>
     </section>
+
+    <section class="hero">
+        <div class="hero-body nopadding has-text-centered container is-max-desktop">
+          <h2 class="title is-3 has-text-centered" style="margin-bottom: 5px">
+            Film Gallery
+          </h2> 
+            We present 4D reconstruction for classic films.
+          <br><br>
+          <div class="container is-max-desktop">
+            <div id="results-carousel" class="carousel results-carousel">
+              <div class="item item-fullbody">
+                <div class="item">
+                  <video autoplay muted loop playsinline>
+                    <source src="static\videos\film\Joker.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+              
+              
+              <div class="item item-fullbody">
+                <div class="item">
+                  <video autoplay muted loop playsinline>
+                    <source src="static\videos\film\The_Way_of_the_Dragon.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+              
+              
+              <div class="item item-fullbody">
+                <div class="item">
+                  <video autoplay muted loop playsinline>
+                    <source src="static\videos\film\Shaolin_Soccer.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+              
+              
+              <div class="item item-fullbody">
+                <div class="item">
+                  <video autoplay muted loop playsinline>
+                    <source src="static\videos\film\The_Matrix.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+              
+              
+              <div class="item item-fullbody">
+                <div class="item">
+                  <video autoplay muted loop playsinline>
+                    <source src="static\videos\film\Scent_of_a_Woman.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+              
+              
+              <div class="item item-fullbody">
+                <div class="item">
+                  <video autoplay muted loop playsinline>
+                    <source src="static\videos\film\Fist_of_Fury.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+              
+              
+              <div class="item item-fullbody">
+                <div class="item">
+                  <video autoplay muted loop playsinline>
+                    <source src="static\videos\film\Pulp_Fiction.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+              
+              
+              <div class="item item-fullbody">
+                <div class="item">
+                  <video autoplay muted loop playsinline>
+                    <source src="static\videos\film\Harry_Potter.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+              
+              
+              <div class="item item-fullbody">
+                <div class="item">
+                  <video autoplay muted loop playsinline>
+                    <source src="static\videos\film\La_La_Land.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <br>
 
     <section class="section has-background-light">
         <div class="container is-max-desktop">
