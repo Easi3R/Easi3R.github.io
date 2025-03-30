@@ -12,7 +12,6 @@ function initializeMediaSection(options) {
 
     if (thumbnails.length === 0) return;
 
-    // 初始化第一个缩略图
     thumbnails[0].style.border = defaultStyles.active;
     source.src = thumbnails[0].getAttribute('data-video');
     element.load();
@@ -20,16 +19,13 @@ function initializeMediaSection(options) {
 
     thumbnails.forEach(thumbnail => {
         thumbnail.addEventListener('click', function() {
-            // 更新缩略图样式
             thumbnails.forEach(t => t.style.border = defaultStyles.normal);
             this.style.border = defaultStyles.active;
             
-            // 更新视频
             source.src = this.getAttribute('data-video');
             element.load();
             element.play();
             
-            // 更新描述
             const description = this.getAttribute('data-description');
             const descElement = document.getElementById(descriptionId);
             if (description && descElement) {
@@ -39,7 +35,6 @@ function initializeMediaSection(options) {
     });
 }
 
-// 添加通用缩略图样式
 const style = document.createElement('style');
 style.innerHTML = `
     .thumbnail {
