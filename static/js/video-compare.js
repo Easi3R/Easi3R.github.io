@@ -16,6 +16,12 @@ function initializeMediaSection(options) {
     source.src = thumbnails[0].getAttribute('data-video');
     element.load();
     element.play();
+    
+    const descElement = document.getElementById(descriptionId);
+    if (descElement) {
+        const initialDescription = thumbnails[0].getAttribute('data-description') || '';
+        descElement.textContent = initialDescription;
+    }
 
     thumbnails.forEach(thumbnail => {
         thumbnail.addEventListener('click', function() {
@@ -26,10 +32,11 @@ function initializeMediaSection(options) {
             element.load();
             element.play();
             
-            const description = this.getAttribute('data-description');
-            const descElement = document.getElementById(descriptionId);
-            if (description && descElement) {
+            const description = this.getAttribute('data-description') || '';
+            if (descElement) {
                 descElement.textContent = description;
+                descElement.style.height = "50px";
+                descElement.style.overflow = "auto";
             }
         });
     });

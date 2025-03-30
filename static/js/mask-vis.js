@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="video-label">GT</span>
                         </div>
                         <div id="mask-video-container" style="width: 100%; position: relative; aspect-ratio: 4678/532;">
-                            <video id="mask-video" autoplay muted loop style="width: 100%; height: 100%;">
+                            <video id="mask-video" autoplay muted loop playsinline disablePictureInPicture controlsList="nodownload nofullscreen" style="width: 100%; height: 100%;">
                                 <source id="mask-video-source" type="video/mp4">
                             </video>
                         </div>
@@ -76,7 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
     videoElement.load();
 
     thumbnails.forEach(thumbnail => {
-        thumbnail.addEventListener('click', () => {
+        thumbnail.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            
             thumbnails.forEach(t => t.style.border = '2px solid #fff');
             thumbnail.style.border = '3px solid #92A8D1';
             
@@ -84,5 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
             videoElement.load();
             videoElement.play();
         });
+    });
+
+    videoElement.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
     });
 });

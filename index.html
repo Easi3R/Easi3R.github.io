@@ -186,6 +186,39 @@
         #carousel-results {
             visibility: hidden;
         }
+
+        @media screen and (max-width: 768px) {
+            #compare-video, #compare-video-das3r, #compare-video-cut3r {
+                width: 100% !important;
+                height: 200px !important;
+            }
+            
+            #compare-description, #compare-description-das3r, #compare-description-cut3r {
+                height: auto !important;
+                min-height: auto !important;
+                max-height: none !important;
+                overflow: visible !important;
+            }
+            
+            .thumbnail {
+                width: 80px !important;
+            }
+        }
+        
+        @media screen and (min-width: 769px) {
+            #compare-video, #compare-video-das3r, #compare-video-cut3r {
+                width: 90% !important;
+                height: 500px !important;
+            }
+            
+            #compare-description, #compare-description-das3r, #compare-description-cut3r {
+                height: 60px !important;
+                overflow: auto !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+        }
     </style>
 </head>
 
@@ -576,12 +609,12 @@
             <div class="container is-max-desktop">
                 <div class="columns is-centered has-text-centered">
                     <div class="column is-full panel-style">
-                        <p id="compare-description" style="max-width: 90%; margin: 0 auto; margin-bottom: 10px; text-align: center;">
+                        <p id="compare-description" style="max-width: 90%; margin: 0 auto; margin-bottom: 0px; text-align: center;">
                             Our method achieves superior structure alignment and fewer artifacts, owing to the robust dynamic segmentation estimation.
                         </p>
                         <br>
                         <div style="text-align: center; display: flex; flex-direction: column; align-items: center; width: 100%;">
-                            <video id="compare-video" width="90%" preload="none" autoplay loop playsinline muted disableRemotePlayback style="pointer-events: none; margin: 0 auto;">
+                            <video id="compare-video" width="90%" height="500px" preload="none" autoplay loop playsinline muted disableRemotePlayback style="pointer-events: none; margin: 0 auto; object-fit: contain; background-color: #fff;">
                                 <source id="compare-video-source" src="./static/videos/vis_pts/vs_mon/dog_and_goose.mp4" type="video/mp4">
                             </video>
                             <div style="display: flex; justify-content: space-evenly; width: 90%; margin: 5px auto;">
@@ -628,12 +661,12 @@
             <div class="container is-max-desktop">
                 <div class="columns is-centered has-text-centered">
                     <div class="column is-full  panel-style">
-                        <p id="compare-description-das3r" style="max-width: 90%; margin: 0 auto; margin-bottom: 10px; text-align: center;">
+                        <p id="compare-description-das3r" style="max-width: 90%; margin: 0 auto; margin-bottom: 0px; text-align: center;">
                             Our method provides clean reconstructions, while DAS3R suffers from structure misalignment and ghosting artifacts due to inaccuracies in dynamic segmentation estimation. For example, it under-segments the dog and goose.
                         </p>
                         <br>
                         <div style="text-align: center; display: flex; flex-direction: column; align-items: center; width: 100%;">
-                            <video id="compare-video-das3r" width="90%" preload="none" autoplay loop playsinline muted disableRemotePlayback style="pointer-events: none; margin: 0 auto;">
+                            <video id="compare-video-das3r" width="90%" height="500px" preload="none" autoplay loop playsinline muted disableRemotePlayback style="pointer-events: none; margin: 0 auto; object-fit: contain; background-color: #fff;">
                                 <source id="compare-video-source-das3r" src="./static/videos/vis_pts/vs_das/dog_and_goose.mp4" type="video/mp4">
                             </video>
                             <div style="display: flex; justify-content: space-evenly; width: 90%; margin: 5px auto;">
@@ -681,7 +714,7 @@
             <div class="container is-max-desktop">
                 <div class="columns is-centered has-text-centered">
                     <div class="column is-full  panel-style">
-                        <p id="compare-description-cut3r" style="max-width: 90%; margin: 0 auto; margin-bottom: 10px; text-align: center;">
+                        <p id="compare-description-cut3r" style="max-width: 90%; margin: 0 auto; margin-bottom: 0px; text-align: center;">
                             <!-- While CUT3R achieves better per-frame depth estimation, it is susceptible to dynamic objects,
                             leading to misaligned static walls and unstable camera pose estimation.
                             Additionally, ghosting artifacts arise as CUT3R lacks dynamic segmentation capability, causing points from different frames to be mixed. -->
@@ -689,7 +722,7 @@
                         </p>
                         <br>
                         <div style="text-align: center; display: flex; flex-direction: column; align-items: center; width: 100%;">
-                            <video id="compare-video-cut3r" width="90%" preload="none" autoplay loop playsinline muted disableRemotePlayback style="pointer-events: none; margin: 0 auto;">
+                            <video id="compare-video-cut3r" width="90%" height="500px" preload="none" autoplay loop playsinline muted disableRemotePlayback style="pointer-events: none; margin: 0 auto; object-fit: contain; background-color: #fff;">
                                 <source id="compare-video-source-cut3r" src="./static/videos/vis_pts/vs_cut/dog_and_goose.mp4" type="video/mp4">
                             </video>
                             <div style="display: flex; justify-content: space-evenly; width: 90%; margin: 5px auto;">

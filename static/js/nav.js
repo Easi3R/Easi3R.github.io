@@ -19,6 +19,62 @@ function showSection(id) {
     }
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.dynamic-section iframe').forEach(function(iframe) {
+        if (!iframe.hasAttribute('data-src')) {
+            iframe.setAttribute('data-src', iframe.src);
+            iframe.removeAttribute('src');
+        }
+    });
+
+    document.getElementById('nav1').classList.add('active');
+    
+    setupFixedContainers();
+    
+    showSection('vs_mon');
+});
+
+function setActive(navId) {
+    document.querySelectorAll('nav ul li a').forEach(function(link) {
+        link.classList.remove('active');
+    });
+    
+    document.getElementById(navId).classList.add('active');
+}
+
+function setupFixedContainers() {
+    const videoContainers = [
+        document.getElementById('compare-video'),
+        document.getElementById('compare-video-das3r'),
+        document.getElementById('compare-video-cut3r')
+    ];
+    
+    videoContainers.forEach(container => {
+        if (container) {
+            container.style.width = "90%";
+            container.style.height = "500px";
+            container.style.objectFit = "contain";
+            container.style.backgroundColor = "#fff";
+        }
+    });
+    
+    const descriptionContainers = [
+        document.getElementById('compare-description'),
+        document.getElementById('compare-description-das3r'),
+        document.getElementById('compare-description-cut3r')
+    ];
+    
+    descriptionContainers.forEach(container => {
+        if (container) {
+            container.style.height = "50px";
+            container.style.overflow = "auto";
+            container.style.display = "flex";
+            container.style.alignItems = "center";
+            container.style.justifyContent = "center";
+        }
+    });
+}
+
 function initCarouselResults() {
     document.querySelectorAll('#carousel-results video source[data-src]').forEach(srcTag => {
         const realSrc = srcTag.getAttribute('data-src');
@@ -37,17 +93,6 @@ function initCarouselResults() {
         pagination: false
     });
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.dynamic-section iframe').forEach(function(iframe) {
-        if (!iframe.hasAttribute('data-src')) {
-            iframe.setAttribute('data-src', iframe.src);
-            iframe.removeAttribute('src');
-        }
-    });
-
-    showSection('vs_mon');
-});
 
 function openInNewTab(element) {
     var url = element.getAttribute('data-link');
