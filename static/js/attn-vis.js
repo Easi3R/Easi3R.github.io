@@ -1,41 +1,84 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    const setupVideoSync = (videos) => {
+        let syncHandlers = [];
+        
+        videos.forEach(video => {
+            const oldHandler = video._syncHandler;
+            if (oldHandler) {
+                video.removeEventListener('ended', oldHandler);
+            }
+        });
+        
+        videos.forEach((video, index) => {
+            const handler = () => {
+                videos.forEach(v => {
+                    v.currentTime = 0;
+                    v.play().catch(e => console.warn('Sync replay error:', e));
+                });
+            };
+            video.addEventListener('ended', handler);
+            video._syncHandler = handler;
+        });
+    };
+
     const thumbnailData = [
-        'boxing-fisheye', 'dance-jump', 'koala', 'car-shadow', 
-        'swing', 'bear', 'hike', 'dog-gooses',
-        'stunt', 'horsejump-high', 'car-turn', 'soapbox'
+        {src: 'w30', alt: 'w30', rgbVideo: 'w30.mp4', middleVideo: 'img_key_state_query_video.mp4', attnVideo: 'state_query_img_pose_key_video.mp4'},
+        {src: 'indoor', alt: 'indoor', rgbVideo: 'indoor.mp4', middleVideo: 'img_key_state_query_video.mp4', attnVideo: 'state_query_img_pose_key_video.mp4'},
+        {src: 'taylor', alt: 'taylor', rgbVideo: 'taylor.mp4', middleVideo: 'img_key_state_query_video.mp4', attnVideo: 'state_query_img_pose_key_video.mp4'},
+        {src: 'citywalk1', alt: 'citywalk1', rgbVideo: 'citywalk1.mp4', middleVideo: 'img_key_state_query_video.mp4', attnVideo: 'state_query_img_pose_key_video.mp4'},
+        {src: 'citywalk2', alt: 'citywalk2', rgbVideo: 'citywalk2.mp4', middleVideo: 'img_key_state_query_video.mp4', attnVideo: 'state_query_img_pose_key_video.mp4'},
+        {src: 'citywalk3', alt: 'citywalk3', rgbVideo: 'citywalk3.mp4', middleVideo: 'img_key_state_query_video.mp4', attnVideo: 'state_query_img_pose_key_video.mp4'},
+        {src: 'walking_daytime', alt: 'walking_daytime', rgbVideo: 'walking_daytime.mp4', middleVideo: 'img_key_state_query_video.mp4', attnVideo: 'state_query_img_pose_key_video.mp4'},
+        {src: 'dance3', alt: 'dance3', rgbVideo: 'dance3.mp4', middleVideo: 'img_key_state_query_video.mp4', attnVideo: 'state_query_img_pose_key_video.mp4'},
+        {src: 'go5', alt: 'go5', rgbVideo: 'go5.mp4', middleVideo: 'img_key_state_query_video.mp4', attnVideo: 'state_query_img_pose_key_video.mp4'},
+        {src: 'go', alt: 'go', rgbVideo: 'go.mp4', middleVideo: 'img_key_state_query_video.mp4', attnVideo: 'state_query_img_pose_key_video.mp4'},
     ];
 
-    const thumbnailsHtml = thumbnailData.map(name => `
-        <img src="static/thumbs/${name}.jpg" 
-             data-video="static/videos/attn/${name}.mp4"
-             class="thumbnail attn-thumbnail" 
-             alt="${name}" 
-             style="cursor: pointer; width: 100px;">
+    const thumbnailsHtml = thumbnailData.map(({src, alt, rgbVideo, middleVideo, attnVideo}) => `
+        <img src="static/thumbs/${src}.jpg" 
+             data-rgb-video="static/videos/attn/${src}/${rgbVideo}"
+             data-middle-video="static/videos/attn/${src}/${middleVideo}"
+             data-attn-video="static/videos/attn/${src}/${attnVideo}"
+             class="thumbnail cluster-thumbnail" 
+             alt="${alt}" 
+             style="cursor: pointer; width: 100px;"
+             onerror="this.style.display='none'; console.warn('Thumbnail not found: ${src}.jpg');">
     `).join('');
 
     const content = `
         <div class="container is-max-desktop">
             <div class="columns is-centered has-text-centered">
                 <div class="column is-full panel-style">
-                    <h2 class="title is-4">Spatial and Temporal Attention Mechanism</h2>
-                    <p style="max-width: 90%; margin: 0 auto; text-align: justify;">
-                        To this end, we identify attention activations attributed to object motion. We infer the dynamic attention map for frame \\(a\\) by computing the joint attention using the element-wise product:
-                        </p>
-                    <div style="max-width: 90%; margin: 0 auto; overflow-x: auto; padding: 10px 0;">
-                        <p style="text-align: center; white-space: nowrap; min-width: max-content;">
-                            \\( \\mathbf{A}^{a=\\text{dyn}} = (1-\\mathbf{A}^{a=\\text{src}}_{\\mu}) \\cdot \\mathbf{A}^{a=\\text{src}}_{\\sigma} \\cdot \\mathbf{A}^{a=\\text{ref}}_{\\mu} \\cdot (1-\\mathbf{A}^{a=\\text{ref}}_{\\sigma}) \\)
-                        </p>
-                    </div>
-                    <br>
                     <div style="position: relative; width: 95%; margin: 0 auto;">
-                        <video id="attn-video" autoplay muted loop playsinline disablePictureInPicture controlsList="nodownload nofullscreen"
-                               style="display: none; position: absolute; z-index: 10; top: 0; left: 0; transform: translateY(45%); width: 100%;">
-                            <source id="attn-video-source" type="video/mp4">
-                        </video>
-                        <img src="static/images/attn_label.png" alt="attn_label" 
-                             style="width: 100%; position: relative; z-index: 1;">
+                        <div style="display: flex; gap: 15px; width: 100%; justify-content: center; align-items: flex-start;">
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <span style="text-align: center; font-size: 16px; font-weight: bold; margin-bottom: 0px;">Video</span>
+                                <div id="rgb-video-container" style="position: relative; display: flex; justify-content: center; align-items: center;">
+                                    <video id="rgb-video" autoplay muted playsinline disablePictureInPicture controlsList="nodownload nofullscreen" style="height: 280px; width: auto; object-fit: contain;">
+                                        <source id="rgb-video-source" type="video/mp4">
+                                    </video>
+                                </div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <span style="text-align: center; font-size: 16px; font-weight: bold; margin-bottom: 0px;">Image attention</span>
+                                <div id="middle-video-container" style="position: relative; display: flex; justify-content: center; align-items: center;">
+                                    <video id="middle-video" autoplay muted playsinline disablePictureInPicture controlsList="nodownload nofullscreen" style="height: 280px; width: auto; object-fit: contain;">
+                                        <source id="middle-video-source" type="video/mp4">
+                                    </video>
+                                </div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <span style="text-align: center; font-size: 16px; font-weight: bold; margin-bottom: 0px;">State learning rate</span>
+                                <div id="attn-video-container" style="position: relative; display: flex; justify-content: center; align-items: center;">
+                                    <video id="attn-video" autoplay muted playsinline disablePictureInPicture controlsList="nodownload nofullscreen" style="height: 280px; width: auto; object-fit: contain;">
+                                        <source id="attn-video-source" type="video/mp4">
+                                    </video>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 20px auto 10px; max-width: 100%;">
+                    <div class="thumbnail-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 25px auto 10px;">
                         ${thumbnailsHtml}
                     </div>
                 </div>
@@ -59,36 +102,170 @@ document.addEventListener('DOMContentLoaded', () => {
     document.head.appendChild(style);
 
     const section = document.getElementById('attn-vis');
+    if (!section) {
+        console.error('attn-vis element not found');
+        return;
+    }
+    
     section.innerHTML = content;
     section.style.display = 'block';
 
-    const videoElement = document.getElementById('attn-video');
-    const videoSource = document.getElementById('attn-video-source');
-    const thumbnails = document.querySelectorAll('.attn-thumbnail');
+    const rgbVideoElement = document.getElementById('rgb-video');
+    const rgbVideoSource = document.getElementById('rgb-video-source');
+    const middleVideoElement = document.getElementById('middle-video');
+    const middleVideoSource = document.getElementById('middle-video-source');
+    const attnVideoElement = document.getElementById('attn-video');
+    const attnVideoSource = document.getElementById('attn-video-source');
+    const thumbnails = document.querySelectorAll('.cluster-thumbnail');
 
-    thumbnails[0].style.border = '3px solid #92A8D1';
-    videoSource.src = thumbnails[0].dataset.video;
-    videoElement.style.display = 'block';
-    videoElement.load();
+    if (!rgbVideoElement || !middleVideoElement || !attnVideoElement || !rgbVideoSource || !middleVideoSource || !attnVideoSource) {
+        console.error('Video elements not found');
+        return;
+    }
 
-    thumbnails.forEach(thumbnail => {
-        thumbnail.addEventListener('click', function(event) {
+    if (thumbnails.length > 0) {
+        thumbnails[0].style.border = '3px solid #92A8D1';
+        rgbVideoSource.src = thumbnails[0].dataset.rgbVideo;
+        middleVideoSource.src = thumbnails[0].dataset.middleVideo;
+        attnVideoSource.src = thumbnails[0].dataset.attnVideo;
+        
+        rgbVideoElement.load();
+        middleVideoElement.load();
+        attnVideoElement.load();
+        
+        let initialLoadedCount = 0;
+        const totalInitialVideos = 3;
+        
+        const onInitialVideoReady = () => {
+            initialLoadedCount++;
+            if (initialLoadedCount === totalInitialVideos) {
+                rgbVideoElement.currentTime = 0;
+                middleVideoElement.currentTime = 0;
+                attnVideoElement.currentTime = 0;
+                
+                const initialPlayPromises = [
+                    rgbVideoElement.play(),
+                    middleVideoElement.play(),
+                    attnVideoElement.play()
+                ];
+                
+                Promise.all(initialPlayPromises).then(() => {
+                    setupVideoSync([rgbVideoElement, middleVideoElement, attnVideoElement]);
+                }).catch(e => console.warn('Initial video play error:', e));
+            }
+        };
+        
+        const setupInitialVideoLoader = (video) => {
+            const onLoad = () => {
+                video.removeEventListener('canplay', onLoad);
+                video.removeEventListener('loadeddata', onLoad);
+                onInitialVideoReady();
+            };
+            video.addEventListener('canplay', onLoad, { once: true });
+            video.addEventListener('loadeddata', onLoad, { once: true });
+        };
+        
+        setupInitialVideoLoader(rgbVideoElement);
+        setupInitialVideoLoader(middleVideoElement);
+        setupInitialVideoLoader(attnVideoElement);
+    }
+
+    let isLoading = false;
+    
+    thumbnails.forEach((thumbnail, index) => {
+        thumbnail.addEventListener('click', (event) => {
             event.preventDefault();
             event.stopPropagation();
             
-            thumbnails.forEach(t => t.style.border = '2px solid #fff');
-            this.style.border = '3px solid #92A8D1';
+            if (isLoading) {
+                console.warn('Videos are still loading, please wait...');
+                return;
+            }
+            isLoading = true;
             
-            videoSource.src = this.dataset.video;
-            videoElement.style.display = 'block';
-            videoElement.load();
-            videoElement.play();
+            thumbnails.forEach(t => t.style.border = '2px solid #fff');
+            thumbnail.style.border = '3px solid #92A8D1';
+            
+            rgbVideoSource.src = thumbnail.dataset.rgbVideo;
+            middleVideoSource.src = thumbnail.dataset.middleVideo;
+            attnVideoSource.src = thumbnail.dataset.attnVideo;
+            
+            rgbVideoElement.pause();
+            middleVideoElement.pause();
+            attnVideoElement.pause();
+            
+            rgbVideoElement.currentTime = 0;
+            middleVideoElement.currentTime = 0;
+            attnVideoElement.currentTime = 0;
+            
+            rgbVideoElement.load();
+            middleVideoElement.load();
+            attnVideoElement.load();
+            
+            let loadedCount = 0;
+            const totalVideos = 3;
+            
+            const onVideoReady = () => {
+                loadedCount++;
+                if (loadedCount === totalVideos) {
+                    rgbVideoElement.currentTime = 0;
+                    middleVideoElement.currentTime = 0;
+                    attnVideoElement.currentTime = 0;
+                    
+                    const playPromises = [
+                        rgbVideoElement.play(),
+                        middleVideoElement.play(),
+                        attnVideoElement.play()
+                    ];
+                    
+                    Promise.all(playPromises).then(() => {
+                        setupVideoSync([rgbVideoElement, middleVideoElement, attnVideoElement]);
+                    }).catch(e => console.warn('Video play error:', e)).finally(() => {
+                        isLoading = false;
+                    });
+                }
+            };
+            
+            const setupVideoLoader = (video) => {
+                const onLoad = () => {
+                    video.removeEventListener('canplay', onLoad);
+                    video.removeEventListener('loadeddata', onLoad);
+                    onVideoReady();
+                };
+                video.addEventListener('canplay', onLoad, { once: true });
+                video.addEventListener('loadeddata', onLoad, { once: true });
+            };
+            
+            setupVideoLoader(rgbVideoElement);
+            setupVideoLoader(middleVideoElement);
+            setupVideoLoader(attnVideoElement);
         });
     });
 
-    videoElement.addEventListener('click', (event) => {
+    rgbVideoElement.addEventListener('click', (event) => {
         event.preventDefault();
         event.stopPropagation();
     });
-});
 
+    middleVideoElement.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+    });
+
+    attnVideoElement.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+    });
+
+    const renderMathJax = () => {
+        if (window.MathJax && window.MathJax.Hub) {
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, section]);
+        } else if (window.MathJax && window.MathJax.typesetPromise) {
+            window.MathJax.typesetPromise([section]).catch((err) => console.log(err.message));
+        } else {
+            setTimeout(renderMathJax, 200);
+        }
+    };
+    
+    setTimeout(renderMathJax, 100);
+});
