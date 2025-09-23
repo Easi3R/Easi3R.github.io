@@ -223,12 +223,3 @@ body {
   overflow: hidden;
   margin: 5px;
 }
-
-.panel-style {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 12px;
-  padding: 30px;
-  margin: 20px 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
